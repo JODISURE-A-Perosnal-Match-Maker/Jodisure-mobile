@@ -190,6 +190,7 @@ const ShareContactsCommonScreen = () => {
 
         contacts.forEach(contact => {
             const parts = contact.displayName.split(" ");
+            console.log("P A R T S",parts);
 
             if (parts.length < 2) {
                 // If there is no 2nd word
@@ -287,7 +288,7 @@ const ShareContactsCommonScreen = () => {
             console.log('Granted:' + grantedT)
             if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT==="GRANTED") {
                 const contactsT = await Contacts.getAll();
-                console.log("??????????", JSON.stringify(contactsT,null, 2));
+                // console.log("??????????", JSON.stringify(contactsT,null, 2));
                 // console.log("You can use the contact", contactsT);
                 const withNameContacts = contactsT.filter(c => {
 
@@ -309,7 +310,7 @@ const ShareContactsCommonScreen = () => {
                     const phoneNumberObj = phoneUtil.parse(number, 'IN');
                     return {
                         recordID: c.recordID,
-                        displayName: c.displayName || (c.givenName+" "+c.middleName+" "+c.familyName),
+                        displayName: c.displayName || (c.givenName+" "+c.familyName),
                         number: phoneUtil.format(phoneNumberObj, PhoneNumberFormat.E164)
                     }
                 })
