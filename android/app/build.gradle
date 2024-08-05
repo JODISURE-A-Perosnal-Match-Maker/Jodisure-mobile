@@ -137,7 +137,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-        versionCode 47
+        versionCode 48
         versionName "1.2.3"
     }
      lintOptions {

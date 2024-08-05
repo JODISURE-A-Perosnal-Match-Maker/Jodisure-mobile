@@ -28,6 +28,45 @@ const App = () => {
   const [notification, setNotification] = React.useState(null);
   const [visible, setVisible] = React.useState(false);
 
+  const checkAppVersion = async () => {
+    try {
+const latestVersion = Platform.OS === 'ios'? await fetch(`https://itunes.apple.com/in/lookup?bundleId= put her your bundleId like com.app`)
+              .then(r => r.json())
+              .then((res) => { return res?.results[0]?.version })
+              : await VersionCheck.getLatestVersion({
+                  provider: 'playStore',
+                  packageName: ' packageName like com.app',
+                  ignoreErrors: true,
+              });
+
+      const currentVersion = VersionCheck.getCurrentVersion();
+
+      if (latestVersion > currentVersion) {
+        Alert.alert(
+          'Update Required',
+'A new version of the app is available. Please update to continue using the app.',
+          [
+            {
+              text: 'Update Now',
+              onPress: () => {
+                Linking.openURL(
+                  Platform.OS === 'ios'
+                    ? VersionCheck.getAppStoreUrl({ appID: 'com.yourapp.package' })
+                    : VersionCheck.getPlayStoreUrl({ packageName: 'com.yourapp.package' })
+                );
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        // App is up-to-date; proceed with the app
+      }
+    } catch (error) {
+      // Handle error while checking app version
+      console.error('Error checking app version:', error);
+    }
+  };
   useEffect(() => {
     SplashScreen.hide();
     console.log(RootNavigation);
@@ -42,6 +81,9 @@ const App = () => {
 
     return unsubscribe;
   }, []);
+  useEffect(()=>{
+    checkAppVersion()
+  },[])
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
 

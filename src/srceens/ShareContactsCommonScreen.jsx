@@ -287,10 +287,11 @@ const ShareContactsCommonScreen = () => {
             console.log('Granted:' + grantedT)
             if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT==="GRANTED") {
                 const contactsT = await Contacts.getAll();
+                console.log("??????????", JSON.stringify(contactsT,null, 2));
                 // console.log("You can use the contact", contactsT);
                 const withNameContacts = contactsT.filter(c => {
 
-                    if (c.displayName && c.phoneNumbers && c.phoneNumbers.length) {
+                    if ((c.displayName || (c.givenName || c.middleName || c.familyName)) && c.phoneNumbers && c.phoneNumbers.length) {
                         const number = c.phoneNumbers[0].number.split(' ').join('');
                         try {
                             const phoneNumberObj = phoneUtil.parse(number, 'IN');
@@ -308,7 +309,7 @@ const ShareContactsCommonScreen = () => {
                     const phoneNumberObj = phoneUtil.parse(number, 'IN');
                     return {
                         recordID: c.recordID,
-                        displayName: c.displayName,
+                        displayName: c.displayName || (c.givenName+" "+c.middleName+" "+c.familyName),
                         number: phoneUtil.format(phoneNumberObj, PhoneNumberFormat.E164)
                     }
                 })
@@ -335,10 +336,10 @@ const ShareContactsCommonScreen = () => {
                         withNameContacts.map(c => c.selected = true);
                     }
                 } else {
-                    console.log("I hope I get this time");
-                    console.log("id-->", id);
+                    // console.log("I hope I get this time");
+                    // console.log("id-->", id);
                     const sharedContacts = await (await getSharedContacts(id))?.data()?.constacts;
-                    console.log("a,efhgkuyf", sharedContacts);
+                    // console.log("a,efhgkuyf", sharedContacts);
                     if (sharedContacts && sharedContacts.length) {
                         withNameContacts.map(wnc => {
                             let isAlreadyShared = false;
