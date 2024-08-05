@@ -1,0 +1,183 @@
+{
+  "project_info": {
+    "project_number": "388198132757",
+    "firebase_url": "https://rivayatt-3c9d5-default-rtdb.firebaseio.com",
+    "project_id": "rivayatt-3c9d5",
+    "storage_bucket": "rivayatt-3c9d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388198132757:android:16b08cbaf68d17dbcf721c",
+        "android_client_info": {
+          "package_name": "com.factedu.rivayatt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388198132757-a3f1jot5n9i4hhmpead96s2e10gpo43k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.factedu.rivayatt",
+            "certificate_hash": "fb3a41901166df2450239eb6e032713defac2833"
+          }
+        },
+        {
+          "client_id": "388198132757-olqr1evjlctslajugkgrlac5rre6h4jg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.factedu.rivayatt",
+            "certificate_hash": "f6619ebd35af6d8eddf82d16d0899749dfe23262"
+          }
+        },
+        {
+          "client_id": "388198132757-r467c475mccc2e91o6vqt8rn8ar5van2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk9bhxqmIwlwy5CdGGbTmBtM58FNLaGbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388198132757-7g8fuc2ueifv982ls22ko39atlunj3cb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388198132757-6t2cn91rsns6l82tg8jol8gavk5mt2p0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rivayatt.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388198132757:android:9a0983415959d61fcf721c",
+        "android_client_info": {
+          "package_name": "com.rivayaat.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388198132757-ab7oau7ton4c7fn2898nt0s6te8k54h4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayaat.app",
+            "certificate_hash": "c757286ae2564041f88e759093804ea2526ea4cf"
+          }
+        },
+        {
+          "client_id": "388198132757-k619vj98ins8op62jon6ql6h9dpnrmud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayaat.app",
+            "certificate_hash": "e8f1699e80f52f4d24065e147e972e9c1f20eeb3"
+          }
+        },
+        {
+          "client_id": "388198132757-r467c475mccc2e91o6vqt8rn8ar5van2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk9bhxqmIwlwy5CdGGbTmBtM58FNLaGbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388198132757-7g8fuc2ueifv982ls22ko39atlunj3cb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388198132757-6t2cn91rsns6l82tg8jol8gavk5mt2p0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rivayatt.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388198132757:android:d743a44e28e801f1cf721c",
+        "android_client_info": {
+          "package_name": "com.rivayatt.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388198132757-9vo6qegaje2sfgqe2cr6ht0ice6j932e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayatt.app",
+            "certificate_hash": "942cb0890c662dea44e0bc1582cb459564c94b35"
+          }
+        },
+        {
+          "client_id": "388198132757-k1eq3o5fs7t5eeb8ncq7u8iu1bf2pkeo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayatt.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "388198132757-ru00nngfp3248r8g3d2ct9ti01fltlv5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayatt.app",
+            "certificate_hash": "43839804e34e5a40e8c01e4e9ff20e65c493032b"
+          }
+        },
+        {
+          "client_id": "388198132757-t9ibl4ra2vqlmnufaglg69clhg71cro3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rivayatt.app",
+            "certificate_hash": "fb3a41901166df2450239eb6e032713defac2833"
+          }
+        },
+        {
+          "client_id": "388198132757-r467c475mccc2e91o6vqt8rn8ar5van2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk9bhxqmIwlwy5CdGGbTmBtM58FNLaGbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388198132757-7g8fuc2ueifv982ls22ko39atlunj3cb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388198132757-6t2cn91rsns6l82tg8jol8gavk5mt2p0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rivayatt.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

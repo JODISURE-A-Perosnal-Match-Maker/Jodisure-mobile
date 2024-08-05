@@ -1,0 +1,111 @@
+{
+  "project_info": {
+    "project_number": "388198132757",
+    "firebase_url": "https://rivayatt-3c9d5-default-rtdb.firebaseio.com",
+    "project_id": "rivayatt-3c9d5",
+    "storage_bucket": "rivayatt-3c9d5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388198132757:android:6962d02d80e70954cf721c",
+        "android_client_info": {
+          "package_name": "com.jodisure.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388198132757-2upjd2vecm3f3pvn5g24qc2tafom6vn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "d0c78cf1b1b2511f36f943fb00263f55aa9e3170"
+          }
+        },
+        {
+          "client_id": "388198132757-8bfjdqlcs2ao329lh9988g60c5e9opao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "388198132757-dn7ke9ah5dp091eqmvghs2fp6cl3vnup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "39449b60309158b99ce291579f05bb7b2348f98a"
+          }
+        },
+        {
+          "client_id": "388198132757-e4ucvkgikol067vsnc1pcls8jsn6pcbb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "07148eb5ce77274688dafbe296b01874420f0e98"
+          }
+        },
+        {
+          "client_id": "388198132757-qhd4v8k1jss7l8l71u3ndu7pv8nu80co.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "fd662c34d895c50b436b5dfc11e0fffa595f5501"
+          }
+        },
+        {
+          "client_id": "388198132757-rq4ek7bb63bvb10fv35pu61lu7eb689v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "8e3a23d05f66396bd72c049721080daef39fcff9"
+          }
+        },
+        {
+          "client_id": "388198132757-ta3fqbikedl1hdsc11uk370os2kffkfp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "e72e74fe1f59d53cdb66ae11ac079cfc09d06d55"
+          }
+        },
+        {
+          "client_id": "388198132757-vib1ojgo3vdpv2a563e762ttaqe0vfuf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jodisure.app",
+            "certificate_hash": "5ae1ccbf70f08c38caadcfc4e408b67d50fddf9c"
+          }
+        },
+        {
+          "client_id": "388198132757-r467c475mccc2e91o6vqt8rn8ar5van2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk9bhxqmIwlwy5CdGGbTmBtM58FNLaGbc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388198132757-7g8fuc2ueifv982ls22ko39atlunj3cb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388198132757-6t2cn91rsns6l82tg8jol8gavk5mt2p0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rivayatt.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
