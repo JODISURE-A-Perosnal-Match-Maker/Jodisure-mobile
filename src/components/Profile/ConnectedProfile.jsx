@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import Theme from '../../components/Theme'
 import Profile from '../../components/Profile';
@@ -49,7 +49,7 @@ const ConnectedProfile = ({ uid, image }) => {
                 {
                     text: "Ok",
                     onPress: async () => {
-                       await  disconnectProfile(uid)
+                        await disconnectProfile(uid)
                         showMessage({
                             message: "Success!",
                             description: "User is disconnected now!",
@@ -67,7 +67,7 @@ const ConnectedProfile = ({ uid, image }) => {
 
                 <Profile uid={uid} showProfilePhotoGrid={true} showFullProfile={showFullProfile} showAvatar={false} topMargin={10} overRideHazy={true}>
                     <View style={{ padding: 16, marginBottom: 40 }}>
-                        <MutualContactsCard uid={uid} isNameNotShow={!isAbleToViewProfile} isUserConnected={true}/>
+                        <MutualContactsCard uid={uid} isNameNotShow={!isAbleToViewProfile} isUserConnected={true} />
                     </View>
                     <View style={{ padding: 0, marginBottom: 40, justifyContent: 'center', alignItems: 'center' }}>
 
@@ -86,13 +86,19 @@ const ConnectedProfile = ({ uid, image }) => {
                                 title={'Share Profile'}
                                 onPress={() => { navigation.navigate('ShareProfile', { uid: uid }) }}
                             />
-                            <Button
-                                buttonStyle={styles.buttonStyle}
-                                title={'Chat'}
-                                onPress={() => {
-                                    navigation.navigate('ChatScreen', { toUid: uid, toUser: user, name: user?.first_name + " " + user?.last_name })
-                                }}
-                            />
+                            {Platform.OS === 'android' && (
+                                <Button
+                                    buttonStyle={styles.buttonStyle}
+                                    title={'Chat'}
+                                    onPress={() => {
+                                        navigation.navigate('ChatScreen', {
+                                            toUid: uid,
+                                            toUser: user,
+                                            name: `${user?.first_name} ${user?.last_name}`
+                                        });
+                                    }}
+                                />
+                            )}
                             {/* <RoundLightButton onPress={handleDisconnect} name="Disconnect" />
                             <RoundDarkButton onPress={()=>{navigation.navigate('ShareProfile',{uid:uid})}}  name="Share Profile"/>
                             <RoundDarkButton onPress={() => {

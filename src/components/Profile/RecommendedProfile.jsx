@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { StyleSheet, View, Image, Alert, TouchableOpacity, Text, Modal, Linking } from "react-native";
+import { StyleSheet, View, Image, Alert, TouchableOpacity, Text, Modal, Linking, Platform } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -176,10 +176,11 @@ const RecomendedProfile  = memo(({ uid, refresh, profile, overRideHazy = false }
           </View>
         </Profile>
       </View>
-
+      {Platform.OS === 'android' && (
       <View style={styles.buttonContainer}>
         <RoundDarkButton onPress={sendRequest} name="REQUEST TO VIEW PROFILE" style={styles.shadow} />
       </View>
+      )}
       {/* modal starts here  */}
       {profile?.similarityPercentage !== undefined ? (
         <Modal
@@ -306,6 +307,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     // Shadow properties for Android
     elevation: 5,
+    zIndex:-100
   },
   paddedContainer: {
     padding: 16,

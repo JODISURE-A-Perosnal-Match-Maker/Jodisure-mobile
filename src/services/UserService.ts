@@ -1,47 +1,50 @@
 import firestore, {
   FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import randomize, {isCrypto} from 'randomatic';
-import firebase from './firebase.service';
-import auth from '@react-native-firebase/auth';
-import {baseApiUrl} from '../constants/firebase.config';
-import moment from 'moment';
-import {string} from 'yup';
-import base64 from 'base-64';
+} from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
+import randomize, { isCrypto } from "randomatic";
+import firebase from "./firebase.service";
+import auth from "@react-native-firebase/auth";
+import { baseApiUrl } from "../constants/firebase.config";
+import moment from "moment";
+import { string } from "yup";
+import base64 from "base-64";
 
-const usersCollection = firestore().collection('users');
-const religionCollection = firestore().collection('religions');
-const additionalInfoCollection = firestore().collection('preference_and_about').doc("preference_and)about");
-const suConnectionsRef = firestore().collection('su_connections');
-export const razorpayKeyId = 'rzp_live_yA0QsE8viCtFkd';
-export const razorpayKeySecret = 'CHKtALraimWO1sVSjC24WzaF';
-export const recommendationURL="https://asia-south1-rivayatt-3c9d5.cloudfunctions.net/getRecomendationFromFirebase/?id=";
+const usersCollection = firestore().collection("users");
+const religionCollection = firestore().collection("religions");
+const additionalInfoCollection = firestore()
+  .collection("preference_and_about")
+  .doc("preference_and)about");
+const suConnectionsRef = firestore().collection("su_connections");
+export const razorpayKeyId = "rzp_live_yA0QsE8viCtFkd";
+export const razorpayKeySecret = "CHKtALraimWO1sVSjC24WzaF";
+export const recommendationURL =
+  "https://asia-south1-rivayatt-3c9d5.cloudfunctions.net/getRecomendationFromFirebase/?id=";
 export async function genUUID(uid: string): Promise<any> {
-  const UUID = randomize('A0', 6, undefined);
+  const UUID = randomize("A0", 6, undefined);
   usersCollection
-    .where('UUID', '==', UUID)
+    .where("UUID", "==", UUID)
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       let count = 0;
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         count++;
       });
       if (count) {
         return genUUID(uid);
       } else {
-        return usersCollection.doc(uid).update({UUID});
+        return usersCollection.doc(uid).update({ UUID });
       }
     });
 }
 
 export async function getUserByUUID(UUID: string): Promise<any> {
   return usersCollection
-    .where('UUID', '==', UUID)
+    .where("UUID", "==", UUID)
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       let users = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         let data = doc.data();
         data.id = doc.id;
         // @ts-ignore
@@ -50,7 +53,7 @@ export async function getUserByUUID(UUID: string): Promise<any> {
       if (users.length) {
         return users[0];
       }
-      throw new Error('Invalid User Id');
+      throw new Error("Invalid User Id");
     });
 }
 
@@ -61,24 +64,24 @@ export async function getUserByUUID(UUID: string): Promise<any> {
 export async function getReligions(): Promise<any[]> {
   return religionCollection
     .get()
-    .then(qs => {
+    .then((qs) => {
       const religions = [];
-      qs.forEach(doc => {
+      qs.forEach((doc) => {
         //@ts-ignore
         religions.push(doc.data().name);
       });
       return religions;
     })
-    .catch(err => {
+    .catch((err) => {
       return [];
     });
 }
 export function shuffleArray(array) {
   for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
 }
 
@@ -89,15 +92,15 @@ export async function addPayment(
   reason: string,
   pKey: string,
   isMeeting: boolean,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
-  console.log('this should work');
+  console.log("this should work");
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('payments')
+    .collection("payments")
     .doc(paymentIntentId)
     .set(
       {
@@ -108,9 +111,9 @@ export async function addPayment(
         reason,
         cratedAt: firestore.FieldValue.serverTimestamp(),
       },
-      {merge: true},
+      { merge: true }
     )
-    .then(res => {
+    .then((res) => {
       const updatedAmount = firestore.FieldValue.increment(parseInt(amount));
       if (!isMeeting) {
         return usersCollection.doc(uid).update({
@@ -122,15 +125,14 @@ export async function addPayment(
 }
 export async function checkOtherUserDPVisible(uid) {
   try {
-    const data=(await usersCollection.doc(uid).get()).data()
+    const data = (await usersCollection.doc(uid).get()).data()
       ?.isPhotoVisibilityEnabled;
 
-      console.log("photo visible", data);
+    console.log("photo visible", data);
 
-      return data;
-      
+    return data;
   } catch (error) {
-    console.log('Error getting documents: ', error);
+    console.log("Error getting documents: ", error);
     return false;
   }
 }
@@ -139,7 +141,7 @@ export async function checkOtherUserFullPrivacy(uid) {
   try {
     return (await usersCollection.doc(uid).get()).data()?.isTotalPrivacyEnabled;
   } catch (error) {
-    console.log('Error getting documents: ', error);
+    console.log("Error getting documents: ", error);
     return false;
   }
 }
@@ -154,19 +156,19 @@ export async function isPUserPremium() {
     // Retrieve the last record based on the createdAt field
     const querySnapshot = await usersCollection
       .doc(uid)
-      .collection('payments')
-      .where("reason","==","Wallet Recharge")
-      .orderBy('cratedAt', 'desc')
+      .collection("payments")
+      .where("reason", "==", "Wallet Recharge")
+      .orderBy("cratedAt", "desc")
       .limit(1)
       .get();
 
     if (querySnapshot.empty) {
-      console.log('No documents found');
+      console.log("No documents found");
       return false;
     }
 
     let isWithinLastMonth = false;
-    querySnapshot.forEach(doc => {
+    querySnapshot.forEach((doc) => {
       // Get the createdAt date from the last document
       const createdAt = doc.data().cratedAt.toDate();
 
@@ -174,18 +176,18 @@ export async function isPUserPremium() {
       isWithinLastMonth = createdAt >= oneMonthAgo && createdAt <= currentDate;
 
       // Log the result
-      console.log('Is within last month:', isWithinLastMonth);
+      console.log("Is within last month:", isWithinLastMonth);
     });
 
     return isWithinLastMonth;
   } catch (error) {
-    console.log('Error getting documentssssssssss: ', error);
+    console.log("Error getting documentssssssssss: ", error);
     return false;
   }
 }
 
 export async function getProfile(
-  uid: string,
+  uid: string
 ): Promise<FirebaseFirestoreTypes.DocumentData> {
   return usersCollection.doc(uid).get();
 }
@@ -193,7 +195,7 @@ export async function updateProfile(data, uid?: string): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  return usersCollection.doc(uid).set(data, {merge: true});
+  return usersCollection.doc(uid).set(data, { merge: true });
 }
 
 export async function deleteProfile(): Promise<any> {
@@ -203,39 +205,39 @@ export async function deleteProfile(): Promise<any> {
 export const createOrder = async (currency, amount) => {
   const credentials = base64.encode(`${razorpayKeyId}:${razorpayKeySecret}`);
   const headers = new Headers();
-  headers.append('Authorization', `Basic ${credentials}`);
-  headers.append('Content-Type', 'application/json');
-  console.log('Amount--->', amount);
+  headers.append("Authorization", `Basic ${credentials}`);
+  headers.append("Content-Type", "application/json");
+  console.log("Amount--->", amount);
 
   const body = JSON.stringify({
     amount: amount,
     currency: currency,
-    receipt: 'qwsaq1',
+    receipt: "qwsaq1",
     partial_payment: false,
     // accept_partial:false,
     first_payment_min_amount: amount,
     notes: {
-      key1: 'value3',
-      key2: 'value2',
+      key1: "value3",
+      key2: "value2",
     },
   });
 
   try {
-    const response = await fetch('https://api.razorpay.com/v1/orders', {
-      method: 'POST',
+    const response = await fetch("https://api.razorpay.com/v1/orders", {
+      method: "POST",
       headers: headers,
       body: body,
     });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok' + response.statusText);
+      throw new Error("Network response was not ok" + response.statusText);
     }
 
     const data = await response.json();
     // console.log("datadatadata",data)
     return data;
   } catch (error) {
-    console.error('There was a problem with your fetch operation:', error);
+    console.error("There was a problem with your fetch operation:", error);
   }
 };
 
@@ -243,27 +245,27 @@ export async function updateSiblingInfo(siblings, uid?: string): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  return usersCollection.doc(uid).update({siblingInfo: siblings});
+  return usersCollection.doc(uid).update({ siblingInfo: siblings });
 }
 
 export async function updateUncleInfo(uncles, uid?: string): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  return usersCollection.doc(uid).update({uncleInfo: uncles});
+  return usersCollection.doc(uid).update({ uncleInfo: uncles });
 }
 export async function updateMeternalUncleInfo(
   uncles,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  return usersCollection.doc(uid).update({m_uncleInfo: uncles});
+  return usersCollection.doc(uid).update({ m_uncleInfo: uncles });
 }
 
 export async function getMyProfile(
-  uid?: string,
+  uid?: string
 ): Promise<FirebaseFirestoreTypes.DocumentData> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
@@ -271,26 +273,28 @@ export async function getMyProfile(
   return usersCollection.doc(uid).get();
 }
 
-export const getHeightAndCity=async ()=>{
-  try{
-   const {city, height}=await (await additionalInfoCollection.get()).data()
-   console.log("city", height);
-   
-   return {city, height}
-  }catch(e){
-    console.error(e)
-    return {}
-  }
-}
+export const getHeightAndCity = async () => {
+  try {
+    const { city, height } = await (
+      await additionalInfoCollection.get()
+    ).data();
+    console.log("city", height);
 
-export const getPreferenceAndAbout= async () =>{
-  try{
-    return await (await additionalInfoCollection.get()).data()
-  }catch(e){
-    console.error(e)
-    return {}
+    return { city, height };
+  } catch (e) {
+    console.error(e);
+    return {};
   }
-}
+};
+
+export const getPreferenceAndAbout = async () => {
+  try {
+    return await (await additionalInfoCollection.get()).data();
+  } catch (e) {
+    console.error(e);
+    return {};
+  }
+};
 
 // export const getMyAdditionalPreferenceAndAbout=async(uid)=>{
 //   try{
@@ -312,12 +316,12 @@ export async function autoGenPreferences(uid?: string): Promise<any> {
   // get user's value
   const user = await getMyProfile(uid);
   const userProfile = user.data();
-  const {dob, marital_status, gender, religion} = userProfile;
+  const { dob, marital_status, gender, religion } = userProfile;
   if (!(dob || marital_status || gender || religion)) {
-    throw new Error('required param not set! prefrenc not generated');
+    throw new Error("required param not set! prefrenc not generated");
   }
-  const age = moment().diff(moment(dob, 'DD/MM/YYYY'), 'years');
-  console.log('age', age);
+  const age = moment().diff(moment(dob, "DD/MM/YYYY"), "years");
+  console.log("age", age);
   // set fromDate
   let fromAge = 21;
   if (age - 5 > fromAge) {
@@ -327,9 +331,9 @@ export async function autoGenPreferences(uid?: string): Promise<any> {
   if (age + 5 < toAge) {
     toAge = age + 5;
   }
-  let pGender = 'male';
-  if (gender === 'male') {
-    pGender = 'female';
+  let pGender = "male";
+  if (gender === "male") {
+    pGender = "female";
   }
 
   return setMyPreferences(
@@ -340,37 +344,48 @@ export async function autoGenPreferences(uid?: string): Promise<any> {
       religion: religion,
       marital_status: marital_status,
     },
-    uid,
+    uid
   );
 }
 
 export async function getMyPreferences(
-  uid?: string,
+  uid?: string
 ): Promise<FirebaseFirestoreTypes.DocumentData> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  return usersCollection.doc(uid).collection('preferences').doc('1').get();
+  return usersCollection.doc(uid).collection("preferences").doc("1").get();
 }
 
 export async function getMyAdditionalPreferences(
-  uid?: string,
+  uid?: string
 ): Promise<FirebaseFirestoreTypes.DocumentData> {
-  if (!uid) {
-    uid = auth()?.currentUser?.uid;
-  }
-  return usersCollection.doc(uid).collection('preferences').doc('1').collection('more-preference').doc('1').get();
-}
-
-export async function setMyAdditionalPreferences(data, uid?: string): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1').collection('more-preference').doc('1')
-    .set(data, {merge: false});
+    .collection("preferences")
+    .doc("1")
+    .collection("more-preference")
+    .doc("1")
+    .get();
+}
+
+export async function setMyAdditionalPreferences(
+  data,
+  uid?: string
+): Promise<any> {
+  if (!uid) {
+    uid = auth()?.currentUser?.uid;
+  }
+  return usersCollection
+    .doc(uid)
+    .collection("preferences")
+    .doc("1")
+    .collection("more-preference")
+    .doc("1")
+    .set(data, { merge: false });
 }
 
 export async function setMyPreferences(data, uid?: string): Promise<any> {
@@ -379,37 +394,37 @@ export async function setMyPreferences(data, uid?: string): Promise<any> {
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
-    .set(data, {merge: true});
+    .collection("preferences")
+    .doc("1")
+    .set(data, { merge: true });
 }
 
 export async function starUser(
   whichUserId: string,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .update({
       staredUsers: firestore.FieldValue.arrayUnion(whichUserId),
     });
 }
 export async function unstarUser(
   whichUserId: string,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .update({
       staredUsers: firestore.FieldValue.arrayRemove(whichUserId),
     });
@@ -421,10 +436,10 @@ export async function getStaredProfiles(uid?: string): Promise<any> {
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .get()
-    .then(doc => {
+    .then((doc) => {
       return doc.data().staredUsers;
     });
 }
@@ -437,15 +452,15 @@ export async function getStaredProfiles(uid?: string): Promise<any> {
  */
 export async function blockUser(
   whichUserId: string,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .update({
       blockedUsers: firestore.FieldValue.arrayUnion(whichUserId),
     });
@@ -459,15 +474,15 @@ export async function blockUser(
  */
 export async function unblockUser(
   whichUserId: string,
-  uid?: string,
+  uid?: string
 ): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .update({
       blockedUsers: firestore.FieldValue.arrayRemove(whichUserId),
     });
@@ -479,14 +494,37 @@ export async function getConnectedUsers(uid?: string): Promise<any[]> {
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .get()
-    .then(doc => {
+    .then((doc) => {
       // @ts-ignore
       if (doc.exists && doc.data().connectedUsers) {
         // @ts-ignore
-        return doc.data().connectedUsers;
+        const connectedUsers = doc.data().connectedUsers;
+        console.log("Original user", connectedUsers);
+        
+        const filteredUsers = connectedUsers.filter((user: any) => {
+          console.log("Checking user:", user, 'typeOf User', typeof user);
+          const isNumber = typeof user === "string";
+          const isObjectWithValue =
+            typeof user === "object" && typeof user.value === "string";
+          
+          return isNumber || isObjectWithValue;
+        });
+
+        // Log the filtered array
+        console.log("Filtered users:", filteredUsers);
+
+        // Map the filtered array to return only numbers
+        const result = filteredUsers.map((user: any) =>
+          typeof user === "string" ? user : user.value
+        );
+
+        // Log the final result
+        console.log("Final result:", result);
+
+        return result;
       } else {
         return [];
       }
@@ -498,10 +536,10 @@ export async function getDisconnectedUsers(uid?: string): Promise<any[]> {
   }
   return usersCollection
     .doc(uid)
-    .collection('preferences')
-    .doc('1')
+    .collection("preferences")
+    .doc("1")
     .get()
-    .then(doc => {
+    .then((doc) => {
       // @ts-ignore
       if (doc.exists && doc.data().disconnectedUsers) {
         // @ts-ignore
@@ -518,14 +556,14 @@ export async function getUserPhoto(uid: string): Promise<string> {
   }
   return usersCollection
     .doc(uid)
-    .collection('images')
-    .doc('dp')
+    .collection("images")
+    .doc("dp")
     .get()
-    .then(doc => {
+    .then((doc) => {
       if (doc.exists) {
         return doc.data()?.url;
       } else {
-        return 'https://picsum.photos/200';
+        return "https://picsum.photos/200";
       }
     });
 }
@@ -536,7 +574,7 @@ export async function setPuserShareContacts(contacts: any[]) {
   return usersCollection
     .doc(uid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       // const contactName = doc?.data()?.contact_name;
       // let nameParts = contactName.split(" ");
       let firstName = doc?.data()?.first_name;
@@ -545,9 +583,9 @@ export async function setPuserShareContacts(contacts: any[]) {
       // console.log('Last Name------->', lastName);
       return usersCollection
         .doc(uid)
-        .collection('sharedContacts')
+        .collection("sharedContacts")
         .doc(uid)
-        .set({constacts: contacts, updatedAt})
+        .set({ constacts: contacts, updatedAt })
         .then(async () => {
           // console.log("uid-=-->",uid);
           await batchAddContact(
@@ -555,12 +593,12 @@ export async function setPuserShareContacts(contacts: any[]) {
             uid,
             firstName,
             lastName,
-            'Self',
-            contacts,
+            "Self",
+            contacts
           );
           return usersCollection
             .doc(uid)
-            .update({sharedContactsCount: contacts.length});
+            .update({ sharedContactsCount: contacts.length });
         });
     });
 }
@@ -570,15 +608,15 @@ export async function batchAddContact(
   su_firstName,
   su_lastName,
   su_relationship,
-  contacts,
+  contacts
 ) {
   const url =
-    'https://asia-south1-rivayatt-3c9d5.cloudfunctions.net/batchAddContacts';
+    "https://asia-south1-rivayatt-3c9d5.cloudfunctions.net/batchAddContacts";
   const response = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       pu_id: pu_id,
@@ -588,7 +626,7 @@ export async function batchAddContact(
       su_relationship: su_relationship,
       contacts: contacts,
     }),
-  }).then(response => response.json());
+  }).then((response) => response.json());
 }
 /**
  * get primary user's shared contachs
@@ -596,13 +634,13 @@ export async function batchAddContact(
  */
 export async function getPuserShareContacts() {
   const uid = auth()?.currentUser?.uid;
-  console.log('check this ID--->', uid);
+  console.log("check this ID--->", uid);
   return usersCollection
     .doc(uid)
-    .collection('sharedContacts')
+    .collection("sharedContacts")
     .doc(uid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       return doc?.data()?.constacts || [];
     });
 }
@@ -663,31 +701,30 @@ export async function getPuserShareContacts() {
 
 export async function getRecomendations(id?: string): Promise<any[]> {
   try {
-    
     if (!id) {
       id = auth()?.currentUser?.uid;
-      }
-    console.log("am I working?", recommendationURL+id);
-    const response = await fetch(recommendationURL+id, {
-      method: 'GET',
+    }
+    console.log("am I working?", recommendationURL + id);
+    const response = await fetch(recommendationURL + id, {
+      method: "GET",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-
-    })
+    });
 
     if (!response.ok) {
-      throw new Error('Network response was not ok' + response.statusText);
+      console.error("----------",response.statusText);
+      
+      // throw new Error("Network response was not ok" + response.statusText);
     }
 
     const data = await response.json();
-    console.log("datadatadata",data)
+    console.log("datadatadata", data);
     // shuffleArray(data)
     return data;
-    
   } catch (e) {
-    console.error('Something went wrong', e);
+    console.error("Something went wrong", e);
     return [];
   }
 }
@@ -697,7 +734,7 @@ async function filterUsers(users, staredUsers, lo, hi, primaryUserid) {
 
   const rx: any[] = [];
   for (const user of users) {
-    const dobParts = user.dob.split('/');
+    const dobParts = user.dob.split("/");
     const dob = new Date(`${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`);
     const age = calculateAge(dob);
     if (
@@ -716,47 +753,47 @@ export async function generateRecomendations(uid?: string): Promise<any> {
   if (!uid) {
     uid = auth()?.currentUser?.uid;
   }
-  getRecomendations(uid).then(rx => {});
+  getRecomendations(uid).then((rx) => {});
 }
 export async function getMutualConnections(
   uid2: string,
-  uid1?: string,
+  uid1?: string
 ): Promise<any> {
   if (!uid1) {
     uid1 = auth()?.currentUser?.uid;
   }
-  const url = baseApiUrl + 'getMutualConnections';
-  const {error, result} = await fetch(url, {
-    method: 'POST',
+  const url = baseApiUrl + "getMutualConnections";
+  const { error, result } = await fetch(url, {
+    method: "POST",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       uid1: uid1,
       uid2: uid2,
     }),
-  }).then(response => response.json());
+  }).then((response) => response.json());
 
-  return {error, result: result};
+  return { error, result: result };
 }
 
 // template
 export async function setTemplate(template) {
   const uid = auth()?.currentUser?.uid;
   return firestore()
-    .collection('users')
+    .collection("users")
     .doc(uid)
-    .update({selectedTemplate: template});
+    .update({ selectedTemplate: template });
 }
 
 // set hidden fields on Biodata
 export async function saveHiddenFieldsOnBio(fields) {
   const uid = auth()?.currentUser?.uid;
   return firestore()
-    .collection('users')
+    .collection("users")
     .doc(uid)
-    .update({hiddenFieldsOnBio: fields});
+    .update({ hiddenFieldsOnBio: fields });
 }
 
 // image gallary related actions
@@ -764,51 +801,51 @@ export async function saveHiddenFieldsOnBio(fields) {
 export async function uploadGallaryImage(
   uid: string,
   filename: string,
-  uploadUrl: any,
+  uploadUrl: any
 ): Promise<any> {
-  const storageRef = storage().ref('images/' + filename);
+  const storageRef = storage().ref("images/" + filename);
   try {
     const res = await storageRef.putFile(uploadUrl);
     const url = await storageRef.getDownloadURL();
     const firestoreRes = await firestore()
-      .collection('users')
+      .collection("users")
       .doc(uid)
-      .collection('images')
-      .add({url: url});
+      .collection("images")
+      .add({ url: url });
   } catch (error) {
     console.log(error);
-    throw new Error('Unable to upload image');
+    throw new Error("Unable to upload image");
   }
-  return 'Image saved!';
+  return "Image saved!";
 }
 
 export async function uploadDisplayPic(
   uid: string,
   filename: string,
-  uploadUrl: any,
+  uploadUrl: any
 ): Promise<any> {
-  const storageRef = storage().ref('images/' + filename);
+  const storageRef = storage().ref("images/" + filename);
   try {
     const res = await storageRef.putFile(uploadUrl);
     const url = await storageRef.getDownloadURL();
     const firestoreRes = await firestore()
-      .collection('users')
+      .collection("users")
       .doc(uid)
-      .collection('images')
-      .doc('dp')
-      .set({url: url});
+      .collection("images")
+      .doc("dp")
+      .set({ url: url });
   } catch (error) {
     console.log(error);
-    throw new Error('Unable to upload image');
+    throw new Error("Unable to upload image");
   }
-  return 'Image saved!';
+  return "Image saved!";
 }
 
 export function deleteGallaryImage(uid: string, imageId: string): Promise<any> {
   return firestore()
-    .collection('users')
+    .collection("users")
     .doc(uid)
-    .collection('images')
+    .collection("images")
     .doc(imageId)
     .delete();
 }

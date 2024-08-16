@@ -40,7 +40,7 @@ const CustomUploadButton = ({ children, onPress }) => (
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 1,
-      borderColor:'#333',
+      borderColor: '#333',
       borderTopRightRadius: 35,
       borderTopLeftRadius: 35,
       borderBottomLeftRadius: 35,
@@ -75,7 +75,7 @@ const HomeBotomTabNavigator = () => {
           tabBarIcon: (({ color }) => (
             <Ionicons name="person" size={24} color={color} />
           )),
-          headerShown:false
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -98,7 +98,7 @@ const HomeBotomTabNavigator = () => {
           headerShown: false
         }}
       />
-      <Tab.Screen
+      {Platform.OS === 'android' && (<Tab.Screen
         name="Requests"
         component={RequestScreenTab}
         options={{
@@ -107,17 +107,19 @@ const HomeBotomTabNavigator = () => {
           )),
           headerShown: false
         }}
-      />
-      <Tab.Screen
-        name="Chats"
-        component={ChatRoomsScreen}
-        options={{
-          tabBarIcon: (({ color }) => (
-            <MaterialIcons name="chat-bubble-outline" size={24} color={color} />
-          )),
-          headerShown: false
-        }}
-      />
+      />)}
+      {Platform.OS === 'android' && (
+        <Tab.Screen
+          name="Chats"
+          component={ChatRoomsScreen}
+          options={{
+            tabBarIcon: (({ color }) => (
+              <MaterialIcons name="chat-bubble-outline" size={24} color={color} />
+            )),
+            headerShown: false
+          }}
+        />
+      )}
     </Tab.Navigator>
   )
 }

@@ -8,7 +8,10 @@ const WalletMeetingRechargeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.banner} >
-        <Image style={styles.img} source={require('./../../assets/images/couple-outline.png')} />
+        <Image style={styles.img} source={Platform.OS === 'android' 
+                ? require('./../../assets/images/couple-outline.png') 
+                : require('./../../assets/images/Poly.png')} />
+        {/* <Image style={styles.img} source={require('./../../assets/images/Poly.png')} /> */}
 
         <Text style={styles.bannerText}>
           {/* mjhasfasf */}
