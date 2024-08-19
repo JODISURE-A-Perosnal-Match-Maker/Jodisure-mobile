@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
     borderRadius: 15,
     paddingVertical: 10,
+    zIndex:-10
   },
   blur: {
     textShadowColor: "rgba(0, 0, 0, 0.55)",

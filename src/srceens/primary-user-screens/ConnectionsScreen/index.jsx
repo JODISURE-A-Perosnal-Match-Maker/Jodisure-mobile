@@ -5,6 +5,8 @@ import {
   View,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 import styled from "styled-components/native";
 import { useRoute, useIsFocused } from "@react-navigation/native";
@@ -18,6 +20,7 @@ import {
 import FullScreenLoader from "../../../theme/FullScreenLoader";
 import theme from "../../../theme/theme";
 import RecomendedProfile from "../../../components/Profile/RecommendedProfile";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const Devider = styled.View`
   height: 8px;
@@ -76,9 +79,19 @@ const ConnectionsScreen = () => {
     >
       {loading && <FullScreenLoader />}
       <View style={styles.container}>
+        <View style={styles.infoButton}>
+          <TouchableOpacity onPress={() => Linking.openURL(`tel:9748548623`)}>
+
+            <View >
+              <AntDesign name="phone" size={24} color="#a05b85" />
+            </View>
+          </TouchableOpacity>
+        </View>
         <View style={{ width: "100%" }}>
           <View style={{ marginVertical: 12, marginLeft: 12 }}>
-            <Theme.TextB>Connected Users</Theme.TextB>
+            <Theme.TextB>{Platform.OS === 'android'
+              ? "Connected Users" : "Hand Picked Profile"}
+            </Theme.TextB>
           </View>
           {fetched && !users?.length && (
             <View>
@@ -101,10 +114,10 @@ const ConnectionsScreen = () => {
               <Devider />
             </View>
           ))}
-          <View  style={styles.grayFilter}>
+          <View style={styles.grayFilter}>
             {disconnectedUsers?.map((u) => (
               <View key={u}>
-                <RecomendedProfile uid={u} overRideHazy={true}/>
+                <RecomendedProfile uid={u} overRideHazy={true} />
               </View>
             ))}
             {disconnectedUsers && disconnectedUsers.length > 0 && (
@@ -120,6 +133,29 @@ const ConnectionsScreen = () => {
 export default ConnectionsScreen;
 
 const styles = StyleSheet.create({
+  infoButton: {
+    position: "absolute",
+    backgroundColor: "#d8d8d8",
+    borderRadius: 50,
+    borderColor: theme.colors.primary,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    top: 1,
+    // right: 1,
+    margin: 6,
+    marginLeft:160,
+    padding: 4,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   container: {
     flex: 1,
     flexDirection: "column",

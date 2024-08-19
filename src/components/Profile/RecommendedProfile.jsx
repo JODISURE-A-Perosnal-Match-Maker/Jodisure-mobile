@@ -14,7 +14,7 @@ import PieChart from "react-native-pie-chart";
 import { Button } from "react-native-elements";
 import FastImage from 'react-native-fast-image';
 
-const RecomendedProfile  = memo(({ uid, refresh, profile, overRideHazy = false }) => {
+const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false }) => {
   const [userImage, setUserImage] = useState("https://picsum.photos/200/300");
   const [isFirstNameVisible, setIsFirstNameVisible] = useState(false);
   const [isAbleToViewProfile, setIsAbleToViewProfile] = useState(false);
@@ -132,7 +132,7 @@ const RecomendedProfile  = memo(({ uid, refresh, profile, overRideHazy = false }
           </TouchableOpacity>
         </View>
         <View style={styles.infoButton}>
-        <TouchableOpacity onPress={() => Linking.openURL(`tel:9748548623`)}>
+          <TouchableOpacity onPress={() => Linking.openURL(`tel:9748548623`)}>
 
             <View >
               <AntDesign name="phone" size={24} color="#a05b85" />
@@ -177,9 +177,9 @@ const RecomendedProfile  = memo(({ uid, refresh, profile, overRideHazy = false }
         </Profile>
       </View>
       {Platform.OS === 'android' && (
-      <View style={styles.buttonContainer}>
-        <RoundDarkButton onPress={sendRequest} name="REQUEST TO VIEW PROFILE" style={styles.shadow} />
-      </View>
+        <View style={styles.buttonContainer}>
+          <RoundDarkButton onPress={sendRequest} name="REQUEST TO VIEW PROFILE" style={styles.shadow} />
+        </View>
       )}
       {/* modal starts here  */}
       {profile?.similarityPercentage !== undefined ? (
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     // Shadow properties for Android
     elevation: 5,
-    zIndex:-100
+    zIndex: -100
   },
   paddedContainer: {
     padding: 16,

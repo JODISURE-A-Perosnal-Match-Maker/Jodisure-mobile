@@ -16,6 +16,7 @@ import { showMessage } from 'react-native-flash-message'
 import CustomFormikInput from '../../components/CustomFormikInput'
 import DropDownPicker from 'react-native-dropdown-picker';
 import GoogleMapAutoComplete from '../../components/GoogleMapAutoComplete/GoogleMapAutoComplete'
+import { err } from 'react-native-svg/lib/typescript/xml'
 
 const primary = theme.colors.grey3;
 const editProfileSchema = yup.object().shape({
@@ -52,6 +53,7 @@ const CreatePrimaryProfile = () => {
     const [religions, setReligions] = useState([]);
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [error, setError]=useState(false)
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const [isTotalPrivacyEnabled, setTotalPrivacyEnabled] = useState(false);
@@ -143,17 +145,23 @@ const CreatePrimaryProfile = () => {
                     values.isPhotoVisibilityEnabled = isPhotoVisibilityEnabled;
                     values.isTotalPrivacyEnabled = isTotalPrivacyEnabled;
                     values.city = city;
-                    console.log(values);
-                    // showMessage({ message: 'Profile updation failed!', type: "danger" })
-                    setLoading(true);
-                    console.log("This is my user profile-->", values)
-                    updateProfile(values).then(res => {
-                        showMessage({ message: 'Profile updated', type: "success" });
-                        navigation.replace('UpdateReligionInfo');
-                    }).catch(err => {
-                        console.log(err);
-                        showMessage({ message: 'Profile updation failed!', type: "danger" })
-                    })
+                    if(!city){
+                        setError(true)
+                        alert("Please enter city")
+                    }else{
+                        
+                        console.log(values);
+                        // showMessage({ message: 'Profile updation failed!', type: "danger" })
+                        setLoading(true);
+                        console.log("This is my user profile-->", values)
+                        updateProfile(values).then(res => {
+                            showMessage({ message: 'Profile updated', type: "success" });
+                            navigation.replace('UpdateReligionInfo');
+                        }).catch(err => {
+                            console.log(err);
+                            showMessage({ message: 'Profile updation failed!', type: "danger" })
+                        })
+                    }
                 }}
                 validateOnMount={true}
                 validateOnChange={true}
@@ -278,8 +286,11 @@ const CreatePrimaryProfile = () => {
                                 onBlur={handleBlur('city')}
                             /> */}
                             <View style={styles.pickerBox}>
-                                <GoogleMapAutoComplete cities={city} setCities={setCity} />
+                                <GoogleMapAutoComplete cities={city} setCities={setCity}/>
 
+                            </View>
+                            <View>
+                                {error?<Text>Please enter city</Text>:<></>}
                             </View>
                             <CustomFormikInput
                                 type="picker"
@@ -480,7 +491,7 @@ const CreatePrimaryProfile = () => {
                             />
                             <View style={{ paddingHorizontal: 50, marginBottom: 20, marginVertical: 20 }}>
                                 <RoundDarkButton 
-                                disabled={!isValid} 
+                                disabled={!isValid || error} 
                                 name="Create bride/groom account" onPress={handleSubmit} />
                             </View>
                         </Fragment>
