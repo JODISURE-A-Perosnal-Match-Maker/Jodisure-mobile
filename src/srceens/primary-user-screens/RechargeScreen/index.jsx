@@ -24,10 +24,26 @@ const RechargeScreen = () => {
   const [pKey, setPKey] = useState("");
   const [isPaid, setIsPaid] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState([]);
-  const [walletBalance, setWalletBalance]=useState();
-  const amount= 110000
+  const [walletBalance, setWalletBalance] = useState();
+  const [amount, setAmount] = useState()
+
+  useEffect(() => {
+    // let amount= 110000
+    if (userData?.profile?.meetingRecharge) {
+      setAmount(userData.profile.meetingRecharge)
+    } else {
+      setAmount(110000)
+
+    }
+  }, [])
+  // const amount= 110000
 
   const fetchPaymentSheetParams = async () => {
+    // let amount = 110000
+    // if (userData?.profile?.meetingRecharge) {
+    //   userData.profile.meetingRecharge;
+    // }
+
     let customer_id = "";
     if (userData?.profile?.customer_id) {
       customer_id = userData.profile.customer_id;
@@ -155,7 +171,7 @@ const RechargeScreen = () => {
     var options = {
       description: 'Wallete Subscription',
       image: userData.profile.photo,
-      accept_partial:false,
+      accept_partial: false,
       currency: 'INR',
       key: razorpayKey,
       amount: amount,
@@ -180,7 +196,7 @@ const RechargeScreen = () => {
       alert(`Success: ${data.razorpay_payment_id}`);
 
       console.log("data--->", data, "orderdata--->", orderData)
-      const paymentResult = await addPayment(orderData.id, amount/100, true, "Meeting Recharge", data.razorpay_payment_id, true);
+      const paymentResult = await addPayment(orderData.id, amount / 100, true, "Meeting Recharge", data.razorpay_payment_id, true);
 
     }).catch((error) => {
       // handle failure
