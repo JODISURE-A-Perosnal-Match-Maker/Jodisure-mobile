@@ -53,7 +53,7 @@ const CreatePrimaryProfile = () => {
     const [religions, setReligions] = useState([]);
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [error, setError]=useState(false)
+    const [error, setError] = useState(false)
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const [isTotalPrivacyEnabled, setTotalPrivacyEnabled] = useState(false);
@@ -145,11 +145,11 @@ const CreatePrimaryProfile = () => {
                     values.isPhotoVisibilityEnabled = isPhotoVisibilityEnabled;
                     values.isTotalPrivacyEnabled = isTotalPrivacyEnabled;
                     values.city = city;
-                    if(!city){
+                    if (!city) {
                         setError(true)
                         alert("Please enter city")
-                    }else{
-                        
+                    } else {
+
                         console.log(values);
                         // showMessage({ message: 'Profile updation failed!', type: "danger" })
                         setLoading(true);
@@ -254,7 +254,7 @@ const CreatePrimaryProfile = () => {
                                 </View>
                             </View>
                             <View style={{ alignSelf: 'flex-start', paddingLeft: 10 }}>
-                                <Text style={{ color: theme.colors.grey0, fontWeight:"800", fontSize: 16 }}>City *</Text>
+                                <Text style={{ color: theme.colors.grey0, fontWeight: "800", fontSize: 16 }}>City *</Text>
                             </View>
                             {/* <DropDownPicker
                                 open={open2}
@@ -286,11 +286,11 @@ const CreatePrimaryProfile = () => {
                                 onBlur={handleBlur('city')}
                             /> */}
                             <View style={styles.pickerBox}>
-                                <GoogleMapAutoComplete cities={city} setCities={setCity}/>
+                                <GoogleMapAutoComplete cities={city} setCities={setCity} />
 
                             </View>
                             <View>
-                                {error?<Text>Please enter city</Text>:<></>}
+                                {error ? <Text>Please enter city</Text> : <></>}
                             </View>
                             <CustomFormikInput
                                 type="picker"
@@ -490,9 +490,9 @@ const CreatePrimaryProfile = () => {
                                 onBlur={handleBlur('personal_info_language')}
                             />
                             <View style={{ paddingHorizontal: 50, marginBottom: 20, marginVertical: 20 }}>
-                                <RoundDarkButton 
-                                disabled={!isValid || error} 
-                                name="Create bride/groom account" onPress={handleSubmit} />
+                                <RoundDarkButton
+                                    disabled={!isValid || error}
+                                    name="Create bride/groom account" onPress={handleSubmit} />
                             </View>
                         </Fragment>
                     )
@@ -501,7 +501,7 @@ const CreatePrimaryProfile = () => {
         );
 
     return (
-        
+
         <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps='always'
@@ -610,11 +610,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4,
         marginTop: 4,
-        marginBottom:20,
-        zIndex:100,
+        marginBottom: 20,
+        zIndex: 100,
         // marginRight: 20,
         height: 48,
-        width:"95%"
+        width: "95%"
     },
     picker: {
         borderWidth: 1,
