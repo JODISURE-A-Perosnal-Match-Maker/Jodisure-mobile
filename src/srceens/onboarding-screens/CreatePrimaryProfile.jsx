@@ -148,6 +148,7 @@ const CreatePrimaryProfile = () => {
                     if (!city) {
                         setError(true)
                         alert("Please enter city")
+                        return
                     } else {
 
                         console.log(values);
@@ -491,7 +492,7 @@ const CreatePrimaryProfile = () => {
                             />
                             <View style={{ paddingHorizontal: 50, marginBottom: 20, marginVertical: 20 }}>
                                 <RoundDarkButton
-                                    disabled={!isValid || error}
+                                    disabled={!isValid}
                                     name="Create bride/groom account" onPress={handleSubmit} />
                             </View>
                         </Fragment>

@@ -52,7 +52,7 @@ const latestVersion = Platform.OS === 'ios'? await fetch(`https://itunes.apple.c
                 Linking.openURL(
                   Platform.OS === 'ios'
                     ? VersionCheck.getAppStoreUrl({ appID: 'com.yourapp.package' })
-                    : VersionCheck.getPlayStoreUrl({ packageName: 'com.yourapp.package' })
+                    : VersionCheck.getPlayStoreUrl({ packageName: 'com.jodisure.app' })
                 );
               },
             },
