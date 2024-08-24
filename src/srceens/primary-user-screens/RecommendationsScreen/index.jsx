@@ -78,7 +78,7 @@ const RecommendationsScreen = () => {
   useEffect(() => {
     // Set initial scroll position to the start
     if (profiles.length > 0) {
-    ref.current?.scrollToIndex({ index: 0, animated: false });
+      ref.current?.scrollToIndex({ index: 0, animated: false });
     }
   }, [profiles]);
 
@@ -187,15 +187,18 @@ const RecommendationsScreen = () => {
 
     const index = Math.round(contentOffsetX / slideSize);
     setScrollIndex(index);
+    console.log("I N D E X ", index, profiles.length);
+
 
     // Check if the user has reached the end of the list
-    if (contentOffsetX >= contentWidth - slideSize) {
+    if (index == profiles.length - 1) {
       ref.current.scrollToIndex({
         index: 0,
         animated: false
       });
     }
-  }, []);
+
+  }, [profiles]);
 
 
 
@@ -267,26 +270,19 @@ const RecommendationsScreen = () => {
       />
       <View style={styles.pnbtnContainer}>
 
-        <TouchableOpacity onPress={prevBtnPresHandler}>
+        {/* <TouchableOpacity onPress={prevBtnPresHandler}>
           <View style={{ ...styles.prevBtn, display: scrollIndex === 0 ? 'none' : 'flex' }}>
             <AntDesignIcom name='left' size={34} color={theme.colors.white} />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <TouchableOpacity onPress={nextBtnPresHandler}>
+        {/* <TouchableOpacity onPress={nextBtnPresHandler}>
           <View style={{ ...styles.nextBtn, display: scrollIndex === profiles.length - 1 ? 'none' : 'flex' }}>
-            {/* <TourGuideZone
-              shape='circle'
-              zone={1}
-              text={'Swipe right or left to navigate'}
-              borderRadius={16}
-            >
-              <AntDesignIcom name='right' size={34} color={theme.colors.white} />
-            </TourGuideZone> */}
+            
             <AntDesignIcom name='right' size={34} color={theme.colors.white} />
           </View>
 
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
       </View>
     </View>
