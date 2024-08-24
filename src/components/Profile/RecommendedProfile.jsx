@@ -28,6 +28,8 @@ const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false })
       try {
         const result = await isPUserPremium();
         console.log("overRideHazy--->", overRideHazy);
+        console.log(" U I D",uid);
+        
         setIsAbleToViewProfile(result);
         // console.log("Able to see???", isAbleToViewProfile)
       } catch (error) {

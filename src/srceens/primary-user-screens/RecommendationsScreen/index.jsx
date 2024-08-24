@@ -75,8 +75,14 @@ const RecommendationsScreen = () => {
     }
   }, [isFocused]);
 
+  useEffect(() => {
+    // Set initial scroll position to the start
+    if (profiles.length > 0) {
+    ref.current?.scrollToIndex({ index: 0, animated: false });
+    }
+  }, [profiles]);
 
-  
+
 
   const refresh = useCallback(() => {
     console.log("u");
@@ -176,9 +182,19 @@ const RecommendationsScreen = () => {
 
   const onScroll = useCallback((event) => {
     const slideSize = event.nativeEvent.layoutMeasurement.width;
-    const index = event.nativeEvent.contentOffset.x / slideSize;
-    const roundIndex = Math.round(index);
-    setScrollIndex(roundIndex);
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const contentWidth = event.nativeEvent.contentSize.width;
+
+    const index = Math.round(contentOffsetX / slideSize);
+    setScrollIndex(index);
+
+    // Check if the user has reached the end of the list
+    if (contentOffsetX >= contentWidth - slideSize) {
+      ref.current.scrollToIndex({
+        index: 0,
+        animated: false
+      });
+    }
   }, []);
 
 
@@ -209,11 +225,11 @@ const RecommendationsScreen = () => {
 
   /**End of Co-pilot */
 
-  const renderItem = useCallback(({item}) => (
+  const renderItem = useCallback(({ item }) => (
     <View style={{ width: width }}>
-    {/* <Text style={{color:"black"}}>{item.id}</Text> */}
-    <RecomendedProfile uid={item.id} refresh={refresh} profile={item} />
-  </View>
+      {/* <Text style={{color:"black"}}>{item.id}</Text> */}
+      <RecomendedProfile uid={item.id} refresh={refresh} profile={item} />
+    </View>
   ), []);
 
   const memoizedRenderItem = useCallback(({ item }) => renderItem({ item }), [renderItem]);
@@ -227,27 +243,28 @@ const RecommendationsScreen = () => {
   const profileListScroller = (
     <View>
       <FlatList
-      ref={ref}
-      initialScrollIndex={scrollIndex}
-      style={styles.list}
-      data={profiles}
-      keyExtractor={(item) => item.id}
-      showsHorizontalScrollIndicator={false}
-      removeClippedSubviews={true}
-      windowSize={5} // Number of items to keep in memory
-      maxToRenderPerBatch={10} // Number of items to render in each batch
-      initialNumToRender={10} // Number of items to render initially
-      horizontal
-      pagingEnabled={true}
-      bounces={false}
-      onScroll={onScroll}
-      renderItem={memoizedRenderItem}
-      updateCellsBatchingPeriod={50} // Interval to update cells batching
-      viewabilityConfig={{
-        itemVisiblePercentThreshold: 50,
-      }}
-      onLayout={handleLayout} // Debug layout
-    />
+        ref={ref}
+        initialScrollIndex={scrollIndex}
+        style={styles.list}
+        data={profiles}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        removeClippedSubviews={true}
+        windowSize={5} // Number of items to keep in memory
+        maxToRenderPerBatch={10} // Number of items to render in each batch
+        initialNumToRender={10} // Number of items to render initially
+        horizontal
+
+        pagingEnabled={true}
+        bounces={false}
+        onScroll={onScroll}
+        renderItem={memoizedRenderItem}
+        updateCellsBatchingPeriod={50} // Interval to update cells batching
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 50,
+        }}
+        onLayout={handleLayout} // Debug layout
+      />
       <View style={styles.pnbtnContainer}>
 
         <TouchableOpacity onPress={prevBtnPresHandler}>
@@ -288,7 +305,7 @@ const RecommendationsScreen = () => {
         <Searchbar
           placeholder="Enter Profile ID"
           onChangeText={setSearchQuery}
-          value={searchQuery} 
+          value={searchQuery}
           onIconPress={searchPorfileID}
 
         />
@@ -297,7 +314,7 @@ const RecommendationsScreen = () => {
             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => start()}>
 
               <Theme.TextB>Recommendations </Theme.TextB>
-              <Badge status='primary' value={profiles.length} />
+              {/* <Badge status='primary' value={profiles.length} /> */}
             </TouchableOpacity>
           </View>
           {/* {(fetched) && profiles.length && <View>

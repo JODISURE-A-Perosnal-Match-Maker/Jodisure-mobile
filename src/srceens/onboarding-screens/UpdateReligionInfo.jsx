@@ -138,8 +138,8 @@ const UpdateReligionInfo = () => {
                         maxHeight={300}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Select religion' : '...'}
-                        searchPlaceholder="Search Religion"
+                        placeholder={!isFocus ? 'Select Sub-Religion' : '...'}
+                        searchPlaceholder="Search by Sub-Religion"
                         value={religion}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
