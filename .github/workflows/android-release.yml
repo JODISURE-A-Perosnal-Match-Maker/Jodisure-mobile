@@ -1,4 +1,5 @@
-name: Build Android Release and Email
+
+name: Build Android Release, Upload to S3, and Email Link
 
 on:
   push:
@@ -24,8 +25,9 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
           java-version: '11'
+          distribution: "adopt"
+          cache: "gradle"
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
@@ -46,7 +48,22 @@ jobs:
           ./gradlew clean
           ./gradlew bundleRelease
 
-      - name: Send email with release bundle
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ap-south-1' # Change to your desired region
+          SOURCE_DIR: 'android/app/build/outputs/bundle/release'
+
+      - name: Generate S3 download link
+        id: s3link
+        run: echo "S3_DOWNLOAD_LINK=https://${{ secrets.AWS_S3_BUCKET }}.s3.amazonaws.com/app-release.aab" >> $GITHUB_ENV
+
+      - name: Send email with S3 link
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -54,7 +71,6 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "New Android Release Bundle"
-          body: "Please find the attached Android release bundle."
+          body: "The Android release bundle has been uploaded. You can download it from the following link: ${{ env.S3_DOWNLOAD_LINK }}"
           to: indranilchakraborty4sc@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
-          attachments: android/app/build/outputs/bundle/release/app-release.aab
