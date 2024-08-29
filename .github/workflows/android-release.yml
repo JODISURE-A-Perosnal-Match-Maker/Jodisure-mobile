@@ -48,6 +48,10 @@ jobs:
           ./gradlew clean
           ./gradlew bundleRelease
 
+      - name: Set upload directory with date and time
+        id: set_upload_dir
+        run: echo "UPLOAD_DIR=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
         with:
@@ -58,6 +62,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'ap-south-1' # Change to your desired region
           SOURCE_DIR: 'android/app/build/outputs/bundle/release'
+          DEST_DIR: "${{ env.UPLOAD_DIR }}/"
 
       - name: Generate S3 download link
         id: s3link
@@ -72,5 +77,5 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "New Android Release Bundle"
           body: "The Android release bundle has been uploaded. You can download it from the following link: ${{ env.S3_DOWNLOAD_LINK }}"
-          to: indranilchakraborty4sc@gmail.com
+          to: rivayatt2021@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
