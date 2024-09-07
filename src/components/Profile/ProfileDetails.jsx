@@ -74,6 +74,11 @@ const ProfileDetails = ({ profile , overRideHazy}) => {
                             {profile?.profession}</Theme.Text></Theme.Text>
                     </LabelContainer>
                     <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Birth Place</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.place_of_birth}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
                         <Theme.Text size="12px" color="#808080">Eating Habits</Theme.Text>
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
                             {profile?.eating_habits}</Theme.Text></Theme.Text>
@@ -117,6 +122,7 @@ const ProfileDetails = ({ profile , overRideHazy}) => {
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
                             {profile?.post_marriage_plan}</Theme.Text></Theme.Text>
                     </LabelContainer>
+                    
                     <LabelContainer>
                         <Theme.Text size="12px" color="#808080">City</Theme.Text>
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
@@ -131,6 +137,11 @@ const ProfileDetails = ({ profile , overRideHazy}) => {
                         <Theme.Text size="12px" color="#808080">Religion subsection</Theme.Text>
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
                             {subsection}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Gotra</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.gotra}</Theme.Text></Theme.Text>
                     </LabelContainer>
 
                     {/* <LabelContainer>

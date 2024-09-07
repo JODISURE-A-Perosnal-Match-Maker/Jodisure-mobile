@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { StyleSheet, Text, View, PermissionsAndroid, Platform, FlatList, StatusBar, TouchableOpacity, BackHandler, Alert, Modal, Button, ScrollView, ActivityIndicator, Image } from 'react-native'
+import { StyleSheet, Text, View, PermissionsAndroid, Platform, FlatList, StatusBar, TouchableOpacity, BackHandler, Alert, Modal, Button, ScrollView, ActivityIndicator, Image, Linking } from 'react-native'
 import { useRoute, useIsFocused, useNavigation, useFocusEffect } from '@react-navigation/native';
 import Contacts from 'react-native-contacts';
 import Theme from '../components/Theme';
@@ -25,121 +25,137 @@ const phoneUtil = PhoneNumberUtil.getInstance();
 
 export const getContactsCommon = async ({ id = null, region = 'IN' }) => {
     try {
-      let grantedT;
-  
-      if (Platform.OS === 'android') {
-        grantedT = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-          {
-            title: "App needs to access your contacts",
-            message: "This app needs access to your contacts to function properly.",
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK"
-          }
-        );
-      } else if (Platform.OS === 'ios') {
-        grantedT = "GRANTED"; // iOS assumes permission is granted for now
-      }
-  
-      if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT === "GRANTED") {
-        const contactsT = await Contacts.getAll();
-        const withNameContacts = contactsT.filter(c => {
-          if ((c.displayName || (c.givenName || c.middleName || c.familyName)) && c.phoneNumbers && c.phoneNumbers.length) {
-            const number = c.phoneNumbers[0].number.split(' ').join('');
-            try {
-              const phoneNumberObj = phoneUtil.parse(number, region);
-              if (phoneUtil.isValidNumberForRegion(phoneNumberObj, region)) {
-                return true;
-              }
-            } catch (error) {
-              return false;
-            }
-          }
-          return false;
-        }).map(c => {
-          const number = c.phoneNumbers[0].number.split(' ').join('');
-          const phoneNumberObj = phoneUtil.parse(number, region);
-          return {
-            recordID: c.recordID,
-            displayName: c.displayName || (c.givenName + " " + c.familyName),
-            number: phoneUtil.format(phoneNumberObj, PhoneNumberFormat.E164)
-          }
-        });
-  
-        // Handle shared contacts
-        let sharedContacts = [];
-        if (!id) {
-          sharedContacts = await getPuserShareContacts();
-        } else {
-          sharedContacts = await (await getSharedContacts(id))?.data()?.constacts || [];
+        let grantedT;
+
+        if (Platform.OS === 'android') {
+            grantedT = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS
+            );
+        } else if (Platform.OS === 'ios') {
+            grantedT = "GRANTED"; // iOS assumes permission is granted for now
         }
-  
-        const updatedContacts = withNameContacts.map(wnc => {
-          const isAlreadyShared = sharedContacts.some(sc => sc.number === wnc.number);
-          return {
-            ...wnc,
-            selected: true,
-            disabled: isAlreadyShared
-          };
-        });
-  
-        // const lastName = groupContactsByLastName(updatedContacts);
-        // const sortedContacts = sortContactsByDisplayName(updatedContacts);
-  
-  
-        return updatedContacts
-          
-  
-      } else {
-        console.log("Contact permission denied");
-        return null;
-      }
+
+        if (grantedT != PermissionsAndroid.RESULTS.GRANTED) {
+            Alert.alert(
+                'Permission Denied',
+                'App needs access to contacts to function properly. Please enable contact permissions in settings.',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Open Settings',
+                        onPress: () => {
+                            Linking.openSettings();
+                            // await getContactsCommon()
+
+                        },
+                    },
+                ],
+                { cancelable: false }
+            );
+            return null
+
+        }
+        if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT === "GRANTED") {
+            const contactsT = await Contacts.getAll();
+            const withNameContacts = contactsT.filter(c => {
+                if ((c.displayName || (c.givenName || c.middleName || c.familyName)) && c.phoneNumbers && c.phoneNumbers.length) {
+                    const number = c.phoneNumbers[0].number.split(' ').join('');
+                    try {
+                        const phoneNumberObj = phoneUtil.parse(number, region);
+                        if (phoneUtil.isValidNumberForRegion(phoneNumberObj, region)) {
+                            return true;
+                        }
+                    } catch (error) {
+                        return false;
+                    }
+                }
+                return false;
+            }).map(c => {
+                const number = c.phoneNumbers[0].number.split(' ').join('');
+                const phoneNumberObj = phoneUtil.parse(number, region);
+                return {
+                    recordID: c.recordID,
+                    displayName: c.displayName || (c.givenName + " " + c.familyName),
+                    number: phoneUtil.format(phoneNumberObj, PhoneNumberFormat.E164)
+                }
+            });
+
+            // Handle shared contacts
+            let sharedContacts = [];
+            if (!id) {
+                sharedContacts = await getPuserShareContacts();
+            } else {
+                sharedContacts = await (await getSharedContacts(id))?.data()?.constacts || [];
+            }
+
+            const updatedContacts = withNameContacts.map(wnc => {
+                const isAlreadyShared = sharedContacts.some(sc => sc.number === wnc.number);
+                return {
+                    ...wnc,
+                    selected: true,
+                    disabled: isAlreadyShared
+                };
+            });
+
+            // const lastName = groupContactsByLastName(updatedContacts);
+            // const sortedContacts = sortContactsByDisplayName(updatedContacts);
+
+
+            return updatedContacts
+
+
+        } else {
+            console.log("Contact permission denied");
+            return null;
+        }
     } catch (err) {
-      console.warn(err);
-      throw err;
+        console.warn(err);
+        throw err;
     }
-  };
+};
 
 export const shareContactsCommon = async (
-  fullContacts,
-  id = null,
+    fullContacts,
+    id = null,
 ) => {
-  // Clear search query and set loading state
+    // Clear search query and set loading state
 
-  // Filter selected contacts
-  const selectedContacts = fullContacts
-  console.log("S E L E C T  C O N T A C T", selectedContacts);
-  
+    // Filter selected contacts
+    const selectedContacts = fullContacts
+    console.log("S E L E C T  C O N T A C T", selectedContacts);
 
-  try {
-    if (!id) {
-      // Primary user contact sharing
-      await setPuserShareContacts(selectedContacts);
-      showMessage({
-        title: "Success",
-        type: "success",
-        message: 'Shared your contacts as primary user.'
-      });
-    } else {
-      // Secondary user contact sharing
-      await setShareContacts(id, selectedContacts);
-      showMessage({
-        title: "Success",
-        type: "success",
-        message: 'Shared your contacts as secondary user.'
-      });
+
+    try {
+        if (!id) {
+            // Primary user contact sharing
+            await setPuserShareContacts(selectedContacts);
+            showMessage({
+                title: "Success",
+                type: "success",
+                message: 'Shared your contacts as primary user.'
+            });
+        } else {
+            // Secondary user contact sharing
+            await setShareContacts(id, selectedContacts);
+            showMessage({
+                title: "Success",
+                type: "success",
+                message: 'Shared your contacts as secondary user.'
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        showMessage({
+            title: "Failed",
+            type: 'danger',
+            message: 'Failed to share your contacts.'
+        });
+    } finally {
+        // Reset loading state
     }
-  } catch (err) {
-    console.log(err);
-    showMessage({
-      title: "Failed",
-      type: 'danger',
-      message: 'Failed to share your contacts.'
-    });
-  } finally {
-    // Reset loading state
-  }
 };
 
 
@@ -311,7 +327,7 @@ const ShareContactsCommonScreen = () => {
 
         contacts.forEach(contact => {
             const parts = contact.displayName.split(" ");
-            console.log("P A R T S",parts);
+            console.log("P A R T S", parts);
 
             if (parts.length < 2) {
                 // If there is no 2nd word
@@ -403,11 +419,11 @@ const ShareContactsCommonScreen = () => {
                 );
             } else if (Platform.OS === 'ios') {
                 console.log("UNDER iOS");
-                grantedT="GRANTED"
+                grantedT = "GRANTED"
             }
             setGranted(grantedT);
             console.log('Granted:' + grantedT)
-            if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT==="GRANTED") {
+            if (grantedT === PermissionsAndroid.RESULTS.GRANTED || grantedT === "GRANTED") {
                 const contactsT = await Contacts.getAll();
                 // console.log("??????????", JSON.stringify(contactsT,null, 2));
                 // console.log("You can use the contact", contactsT);
@@ -431,7 +447,7 @@ const ShareContactsCommonScreen = () => {
                     const phoneNumberObj = phoneUtil.parse(number, 'IN');
                     return {
                         recordID: c.recordID,
-                        displayName: c.displayName || (c.givenName+" "+c.familyName),
+                        displayName: c.displayName || (c.givenName + " " + c.familyName),
                         number: phoneUtil.format(phoneNumberObj, PhoneNumberFormat.E164)
                     }
                 })
@@ -450,7 +466,7 @@ const ShareContactsCommonScreen = () => {
                             if (isAlreadyShared) {
                                 wnc.selected = true;
                                 wnc.disabled = true;
-                            }else{
+                            } else {
                                 wnc.selected = true;
 
                                 wnc.disabled = true;
@@ -478,7 +494,7 @@ const ShareContactsCommonScreen = () => {
                             if (isAlreadyShared) {
                                 wnc.selected = true;
                                 wnc.disabled = true;
-                            }else{
+                            } else {
                                 wnc.selected = true;
 
                                 wnc.disabled = true;
