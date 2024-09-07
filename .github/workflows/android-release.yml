@@ -1,0 +1,81 @@
+
+name: Build Android Release, Upload to S3, and Email Link
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: "adopt"
+          cache: "gradle"
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build Android release bundle
+        working-directory: android
+        run: |
+          ./gradlew clean
+          ./gradlew bundleRelease
+
+      - name: Set upload directory with date and time
+        id: set_upload_dir
+        run: echo "UPLOAD_DIR=$(date +'%Y-%m-%d_%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Upload to S3
+        uses: jakejarvis/s3-sync-action@v0.5.1
+        with:
+          args: --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'ap-south-1' # Change to your desired region
+          SOURCE_DIR: 'android/app/build/outputs/bundle/release'
+          DEST_DIR: "${{ env.UPLOAD_DIR }}/"
+
+      - name: Generate S3 download link
+        id: s3link
+        run: echo "S3_DOWNLOAD_LINK=https://${{ secrets.AWS_S3_BUCKET }}.s3.amazonaws.com/app-release.aab" >> $GITHUB_ENV
+
+      - name: Send email with S3 link
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "New Android Release Bundle"
+          body: "The Android release bundle has been uploaded. You can download it from the following link: ${{ env.S3_DOWNLOAD_LINK }}"
+          to: rivayatt2021@gmail.com
+          from: ${{ secrets.EMAIL_USERNAME }}

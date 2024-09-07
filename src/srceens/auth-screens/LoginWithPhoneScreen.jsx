@@ -274,7 +274,7 @@ const LoginWithPhoneScreen = (props) => {
           </View>
         </Section>
 
-        <SliderButton width={'90%'} backgroundColor={[theme.colors.primary,theme.colors.grey1]} iconColor="white" sliderColor={theme.colors.primaryDark} onSlideCompleted={()=>{navigation.navigate("LoginWithEmail");}} text="Slide to login via email"/>
+        <SliderButton width={'90%'} backgroundColor={[theme.colors.primary, theme.colors.grey1]} iconColor="white" sliderColor={theme.colors.primaryDark} onSlideCompleted={() => { navigation.navigate("LoginWithEmail"); }} text="Slide to login via email" />
         {/* <PromoSection>
           <PromoText>Promotional Content</PromoText>
           <PromoImage source={require('./../../assets/images/group_19.png')}></PromoImage>

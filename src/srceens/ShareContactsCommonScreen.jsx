@@ -320,7 +320,7 @@ const ShareContactsCommonScreen = () => {
                     // console.log("contttt", sharedContacts);
                     if (sharedContacts.length) {
                         withNameContacts.map(wnc => {
-                            let isAlreadyShared = false;
+                            let isAlreadyShared = true;
                             sharedContacts.map(sc => {
                                 if (sc.number === wnc.number) {
                                     isAlreadyShared = true;
@@ -329,6 +329,11 @@ const ShareContactsCommonScreen = () => {
                             if (isAlreadyShared) {
                                 wnc.selected = true;
                                 wnc.disabled = true;
+                            }else{
+                                wnc.selected = true;
+
+                                wnc.disabled = true;
+
                             }
 
                         })
@@ -343,7 +348,7 @@ const ShareContactsCommonScreen = () => {
                     // console.log("a,efhgkuyf", sharedContacts);
                     if (sharedContacts && sharedContacts.length) {
                         withNameContacts.map(wnc => {
-                            let isAlreadyShared = false;
+                            let isAlreadyShared = true;
                             sharedContacts.map(sc => {
                                 if (sc.number === wnc.number) {
                                     isAlreadyShared = true;
@@ -352,10 +357,15 @@ const ShareContactsCommonScreen = () => {
                             if (isAlreadyShared) {
                                 wnc.selected = true;
                                 wnc.disabled = true;
+                            }else{
+                                wnc.selected = true;
+
+                                wnc.disabled = true;
+
                             }
 
                         })
-                        setIsSelectedAll(false);
+                        setIsSelectedAll(true);
                     } else {
                         withNameContacts.map(c => c.selected = true);
                     }
