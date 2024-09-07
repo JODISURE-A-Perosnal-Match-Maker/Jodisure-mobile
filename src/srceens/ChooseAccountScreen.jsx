@@ -253,7 +253,7 @@ const DATA = [
   // },
   {
     key: "7",
-    title: "Family and Friends account",
+    title: "Mutual Family Link",
     description: `Empower your loved ones on JodiSure. Your insights and network can be the key to unlocking their perfect match. Be a part of their joy as they find lasting love.`,
     // image: 'https://image.flaticon.com/icons/png/512/1432/1432525.png',
     type: "family",
@@ -492,7 +492,7 @@ const ChooseAccountScreen = ({ navigation }) => {
                 {/* {item.type && <SignUpSection navigation={navigation} />} */}
                 {item.type === "family" ? (
                   // Render something for type 'family'
-                  <RoundedButton icon={<Image source={fnfLoginIcon} style={{ height: 30, width: 35, marginRight: 20 }} />} onPress={() => onFriendAndFamilyUser()} title="Get connected" />
+                  <RoundedButtonTwo icon={<Image source={fnfLoginIcon} style={{ height: 30, width: 35, marginRight: 20 }} />} onPress={() => onFriendAndFamilyUser()} title="Share Contacts" />
 
                 ): null}
                 {item.type === "primary" ? (
@@ -501,7 +501,7 @@ const ChooseAccountScreen = ({ navigation }) => {
                     {/* Example: */}
                     {!fetchingProfile && isActive && profile?.onboarded ? (
                       // Render something 2.1 if conditions are met
-                      <RoundedButtonTwo
+                      <RoundedButton
                         onPress={() => onPressPrimaryUser()}
                         title="Find your Match"
                       />
@@ -514,7 +514,8 @@ const ChooseAccountScreen = ({ navigation }) => {
                           Create bride/groom account
                           </Theme.TextB>
                         </TouchableOpacity> */}
-                        <RoundedButtonTwo
+                        <RoundedButton
+
                         onPress={() => openSignupPage()}
                         title="Create bride/groom account"
                       />

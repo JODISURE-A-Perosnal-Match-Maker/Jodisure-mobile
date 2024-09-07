@@ -31,6 +31,8 @@ const editProfileSchema = yup.object().shape({
     marital_status: yup.string().required('Marital status is required'),
     profession: yup.string().trim().required('Profession is required'),
     company_name: yup.string().trim().required('Company name is required'),
+    birth_time: yup.string().trim().required('Company name is required'),
+
     height: yup.string().required('Height is required'),
     // post_marriage_plan: yup.string().trim().required('Post marriage plan is required'),
     carrer_info: yup.string().trim().required('Highest qualification is required'),
@@ -371,6 +373,16 @@ const CreatePrimaryProfile = () => {
                                 error={touched.place_of_birth && errors.place_of_birth}
                                 onChangeText={handleChange('place_of_birth')}
                                 onBlur={handleBlur('place_of_birth')}
+                            />
+                            <CustomFormikInput
+                                type="input"
+                                label="Birth Time *"
+                                placeholder="Birth Time"
+                                value={values.birth_time}
+                                disabled={false}
+                                error={touched.birth_time && errors.birth_time}
+                                onChangeText={handleChange('birth_time')}
+                                onBlur={handleBlur('birth_time')}
                             />
                             <CustomFormikInput
                                 type="input"
