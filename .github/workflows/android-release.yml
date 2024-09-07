@@ -76,6 +76,6 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "New Android Release Bundle"
-          body: "The Android release bundle has been uploaded. You can download it from the following link: ${{ env.S3_DOWNLOAD_LINK }}"
+          body: "The Android release bundle has been uploaded to upload to google playstore. You can download it from the following link: ${{ env.S3_DOWNLOAD_LINK }}"
           to: rivayatt2021@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}

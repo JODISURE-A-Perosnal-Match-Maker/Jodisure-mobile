@@ -419,13 +419,13 @@ const CreatePrimaryProfile = () => {
 
                             <CustomFormikInput
                                 type="input"
-                                label="Weight(KG) *"
-                                placeholder="Weight"
-                                value={values.weight}
+                                label="Native Place "
+                                placeholder="Native Place"
+                                value={values.native_place}
                                 disabled={false}
-                                error={touched.weight && errors.weight}
-                                onChangeText={handleChange('weight')}
-                                onBlur={handleBlur('weight')}
+                                error={touched.weight && errors.native_place}
+                                onChangeText={handleChange('native_place')}
+                                onBlur={handleBlur('native_place')}
                             />
                             <View style={{ marginBottom: 20 }}></View>
 
