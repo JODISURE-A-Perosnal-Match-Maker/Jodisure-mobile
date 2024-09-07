@@ -22,8 +22,9 @@ import { color } from 'react-native-reanimated'
 const primary = theme.colors.grey3;
 const editProfileSchema = yup.object().shape({
     // religion: yup.string().trim().max(50, 'This can not be that long').required("Religion is required"),
-    contact_name: yup.string().trim().required("Contact name is required"),
-    // contact_email: yup.string().trim().email("Invalid email address").required("Contact email is required").email("Invalid email"),
+    contact_name: yup.string().trim().required("Father's name is required"),
+    gotra: yup.string().trim().required("Gotra is required"),
+    contact_email: yup.string().trim().required("Mother's name is required"),
     contact_no: yup.string().trim().max(13, 'Invalid phone number').required('Contact number is required')
 })
 
@@ -34,7 +35,7 @@ const UpdateReligionInfo = () => {
     }
     const [profile, setProfile] = useState(initialProfileValue);
     const [religions, setReligions] = useState([]);
-    const [religion, setReligion]=useState([]);
+    const [religion, setReligion]=useState();
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false);
     const isFocused = useIsFocused();
@@ -156,6 +157,17 @@ const UpdateReligionInfo = () => {
                         //     />
                         // )}
                     />
+                    <CustomFormikInput
+                            type="input"
+                            label="Enter your Gotra*"
+                            placeholder="Gotra"
+                            value={values.gotra}
+                            // helpText={'Jodisure will connect with this contact for further communication'}
+                            disabled={false}
+                            error={touched.gotra && errors.gotra}
+                            onChangeText={handleChange('gotra')}
+                            onBlur={handleBlur('gotra')}
+                        />
 
                     <View style={{ marginBottom: 20 }}></View>
                     <View style={styles.contactContainer}>
@@ -164,8 +176,8 @@ const UpdateReligionInfo = () => {
                         </View>
                         <CustomFormikInput
                             type="input"
-                            label="Contact Name*"
-                            placeholder="Contact person name"
+                            label="Father's Name*"
+                            placeholder="Father's Name"
                             value={values.contact_name}
                             // helpText={'Jodisure will connect with this contact for further communication'}
                             disabled={false}
@@ -175,8 +187,8 @@ const UpdateReligionInfo = () => {
                         />
                         <CustomFormikInput
                             type="input"
-                            label="Contact Email"
-                            placeholder="Contact person's email"
+                            label="Mother's Name"
+                            placeholder="Mother's Full Name"
                             value={values.contact_email}
                             disabled={false}
                             error={touched.contact_email && errors.contact_email}

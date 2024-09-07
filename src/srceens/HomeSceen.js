@@ -8,6 +8,8 @@ import ConnectionsCard from '../components/ConnectionsCard';
 import AwaitingResponseCard from '../components/AwaitingResponseCard';
 import SubscriptionInfoCard from '../components/SubscriptionInfoCard';
 import RoundDarkButton from '../components/RoundDarkButton';
+import { showMessage } from 'react-native-flash-message';
+
 import Profile from '../components/Profile';
 import { UserContext } from '../navigation';
 import { useRoute, useIsFocused, useNavigation } from '@react-navigation/native';
@@ -20,6 +22,7 @@ import theme from '../theme/theme';
 import config from '../constants/config';
 import MeetingRechargeInfoCard from '../components/MeetingRechargeCard';
 import RechargeInfoCard from '../components/RechargeInfoCard';
+import { getContactsCommon, shareContactsCommon } from './ShareContactsCommonScreen';
 
 
 // import Colors from './../../constants/Colors';
@@ -78,17 +81,37 @@ const HomeScreen = () => {
 
   useMemo(() => {
     if (!userData || !userData.profile) return;
-    if (!userData.profile.sharedContactsCount) {
+    if ( userData.sharedContact.length===0) {
       Alert.alert('Share your contacts', 'JodiSure works best when your contacts are shared with us. This would help us give you relevent matches.', [
         {
           text: 'Ok',
-          onPress: () => {
-            navigation.navigate('PuserShareContacts');
+          onPress: async () => {
+            getAndShareContacts()
           }
         }
       ])
     }
   }, [userData])
+
+   const getAndShareContacts = async () => {
+    try {
+      console.log("Trying step 1");
+      
+      // Step 1: Get contacts
+      const fullContactsHome = await getContactsCommon('IN');
+      console.log("Trying step 2");
+
+      // Step 2: Share the contacts
+      await shareContactsCommon(fullContactsHome, null);
+    } catch (error) {
+      console.error('Error in getAndShareContacts:', error);
+      showMessage({
+        title: "Error",
+        type: 'danger',
+        message: 'An error occurred while sharing contacts.'
+      });
+    }
+  };
 
   useEffect(() => {
     getConnectedUsers().then(cons => {

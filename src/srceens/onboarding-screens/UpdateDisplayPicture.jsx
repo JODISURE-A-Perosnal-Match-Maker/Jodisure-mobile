@@ -73,7 +73,7 @@ const UpdateDisplayPicture = () => {
     const handleSubmit = () => {
         const values = {};
         values.isDpCompleted = true;
-        values.status = "approve";
+        values.status = "pending";
         values.onboarded = true;
 
         setLoading(true);
