@@ -20,6 +20,8 @@ const tabBarOptions = {
 function RequestsTab({ navigation, activeTab }) {
   useEffect(() => {
     if (activeTab) {
+      console.log("ACTIVE TAB", activeTab);
+
       navigation.navigate(activeTab)
     }
   }, [activeTab]);
@@ -33,20 +35,41 @@ function RequestsTab({ navigation, activeTab }) {
     //   tabBarIndicatorStyle: { backgroundColor: theme.colors.primary },
     // }}
     >
-      <Tab.Screen name="My Information" options={{
-        tabBarIndicatorStyle: { backgroundColor: theme.colors.primary },
-        tabBarActiveTintColor: theme.colors.primaryMedium, // Active color for "Your Information"
-        tabBarInactiveTintColor: theme.colors.secondary, // Inactive color for "Your Preference"
+      <Tab.Screen name="My Information"
+        options={{
+          tabBarIndicatorStyle: { backgroundColor: theme.colors.primary },
+          tabBarActiveTintColor: theme.colors.primaryMedium, // Active color for "Your Information"
+          tabBarInactiveTintColor: theme.colors.secondary, // Inactive color for "Your Preference"
+        }}
+        
+        component={AdditionalUserInfo}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Prevent default action
+            e.preventDefault();
+            console.log("Hope it works");
 
-      }} component={AdditionalUserInfo} />
+            navigation.navigate('My Preference');
+
+          },
+        })}
+      />
       <Tab.Screen name="My Preference"
         options={{
           tabBarIndicatorStyle: { backgroundColor: theme.colors.secondaryDark2 },
-
           tabBarActiveTintColor: theme.colors.secondaryMedium, // Active color for "Your Preference"
           tabBarInactiveTintColor: theme.colors.primary, // Inactive color for "Your Information"
-
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Prevent default action
+            console.log("Hope it works xoxo");
+
+            navigation.navigate('My Information');
+            e.preventDefault();
+
+          },
+        })}
         component={UserPreference} />
     </Tab.Navigator>
   );

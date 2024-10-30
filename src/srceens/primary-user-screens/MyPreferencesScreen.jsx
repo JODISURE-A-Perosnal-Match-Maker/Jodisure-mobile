@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import RangeSlider, { Slider } from 'react-native-range-slider-expo';
 import Theme from '../../components/Theme';
 import { getMyPreferences, getReligions, setMyPreferences } from '../../services/UserService';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';

@@ -108,7 +108,21 @@ const ProfileDetails = ({ profile , overRideHazy}) => {
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
                             {profile?.health_issue}</Theme.Text></Theme.Text>
                     </LabelContainer>
-
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Father's Name</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.contact_name}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Father's Occupation</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.father_occupation}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Complexion</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.complexion}</Theme.Text></Theme.Text>
+                    </LabelContainer>
                     {/* <LabelContainer>
                         <Theme.Text size="12px" color="#808080">Hobby</Theme.Text>
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}> 
@@ -163,6 +177,16 @@ const ProfileDetails = ({ profile , overRideHazy}) => {
                         <Theme.Text size="12px" color="#808080">Weight</Theme.Text>
                         <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
                             {profile?.weight}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Mothers's Name</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.contact_email}</Theme.Text></Theme.Text>
+                    </LabelContainer>
+                    <LabelContainer>
+                        <Theme.Text size="12px" color="#808080">Native Place</Theme.Text>
+                        <Theme.Text size="14px" color="#000000"><Theme.Text style={overRideHazy ? {} : (profile.isTotalPrivacyEnabled ? styles.blur : {})} color={overRideHazy ? "black" : (profile.isTotalPrivacyEnabled ? "transparent" : "black")}>
+                            {profile?.native_place}</Theme.Text></Theme.Text>
                     </LabelContainer>
                 </PDetailContainer>
 

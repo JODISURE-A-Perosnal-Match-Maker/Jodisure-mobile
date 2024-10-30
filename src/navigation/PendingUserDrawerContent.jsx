@@ -52,14 +52,14 @@ const PendingUserDrawerContent = (props) => {
                                 </ListItem.Content>
                             </ListItem>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('PuserShareContacts')}>
-                            <ListItem bottomDivider>
+                        {/* <TouchableOpacity onPress={() => navigation.navigate('PuserShareContacts')}> */}
+                            {/* <ListItem bottomDivider>
                                 <AntDesignIcons name="phone" color={theme.colors.secondaryDark} size={30} />
                                 <ListItem.Content>
                                     <ListItem.Title><Theme.TextB>Shared Contacts</Theme.TextB></ListItem.Title>
                                 </ListItem.Content>
-                            </ListItem>
-                        </TouchableOpacity>
+                            </ListItem> */}
+                        {/* </TouchableOpacity> */}
                         <TouchableOpacity onPress={() => navigation.navigate('ConnectedFnF')}>
                             <ListItem bottomDivider>
                                 <MaterialIcons name="people" color={theme.colors.secondaryDark} size={30} />

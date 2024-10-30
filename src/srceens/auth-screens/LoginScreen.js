@@ -59,7 +59,7 @@ const LoginWithEmailScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/images/splash_icon_old.png")}
+        source={require("../../assets/images/logo_dark.png")}
         style={{
           width: width/2,
           height: width/2,
@@ -108,10 +108,10 @@ const LoginWithEmailScreen = () => {
             color: 'white',
           }}
           disabled={!email || !password}
-          buttonStyle={{ backgroundColor: Colors.primary }}
+          buttonStyle={{ backgroundColor: "#B3A06B" }}
           loading={loading}
           raised
-          title="Sign In"
+          title="Login"
           onPress={signInWithEmailAndPassword}
         />
       </Card>
@@ -147,14 +147,13 @@ const styles = StyleSheet.create({
     width: '90%',
     paddingHorizontal: 20,
     marginHorizontal: 20,
-    borderRadius: 25,
-    backgroundColor: Colors.primary,
+    backgroundColor: "rgb(66,66,66)",
   },
   buttonContainer: {
     top: 20,
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: "#B3A06B",
     height: 50,
     borderRadius: 25,
     paddingHorizontal: 50,

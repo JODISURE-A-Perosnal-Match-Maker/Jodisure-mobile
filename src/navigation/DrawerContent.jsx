@@ -60,7 +60,7 @@ const DrawerContent = (props) => {
                 </ListItem.Content>
               </ListItem>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('PuserShareContacts')}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('PuserShareContacts')}>
               <ListItem bottomDivider>
                 <AntDesignIcons name="phone" color={theme.colors.secondaryDark} size={30} />
                 <ListItem.Content>
@@ -68,7 +68,7 @@ const DrawerContent = (props) => {
                   </Theme.TextB></ListItem.Title>
                 </ListItem.Content>
               </ListItem>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={() => navigation.navigate('ConnectedFnF')}>
               <ListItem bottomDivider>
                 <MaterialIcons name="people" color={theme.colors.secondaryDark} size={30} />

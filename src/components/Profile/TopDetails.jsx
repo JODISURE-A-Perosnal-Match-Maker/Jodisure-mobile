@@ -16,8 +16,9 @@ const TopDetails = ({ profile, isFirstNameVisible, overRideHazy }) => {
       </View>
     )
   }
-  const years = moment().diff(moment(profile?.dob, 'DD/MM/YYYY'), 'years');
-  return (
+  const dobFormats = ['DD/MM/YYYY', 'YYYY-MM-DD'];
+  const years = moment().diff(moment(profile?.dob, dobFormats, true), 'years');
+    return (
     <View style={styles.col}>
       {/* <Text>{JSON.stringify(profile,null,2)}</Text> */}
       <View style={{ marginTop: 1 }}></View>

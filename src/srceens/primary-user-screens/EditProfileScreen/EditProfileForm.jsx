@@ -50,14 +50,14 @@ const EditProfileForm = ({ initialValue, religions }) => {
                         initialValues={initialValue}
                         onSubmit={(values, showMessage = false) => {
                             updateProfile(values).then(res => {
-                                if (showMessage) {
-                                    showMessage({ message: 'Profile updated', type: "success" })
-                                }
+                                // if (showMessage) {
+                                //     showMessage({ message: 'Profile updated', type: "success" })
+                                // }
                             }).catch(err => {
                                 console.log(err);
-                                if (showMessage) {
-                                    showMessage({ message: 'Profile updation failed!', type: "danger" })
-                                }
+                                // if (showMessage) {
+                                //     showMessage({ message: 'Profile updation failed!', type: "danger" })
+                                // }
                             })
                         }}
                         validateOnMount={true}
