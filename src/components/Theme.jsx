@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 
 const primaryCol = 'black';
-const secondaryCol = '#bd6f9e';
+const secondaryCol = '#2C251B';
 const lightGray = '#696969';
 
 const Text = styled.Text`

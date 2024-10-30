@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useLayoutEffect, useMemo } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, TouchableOpacity, Alert, Linking } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableWithoutFeedback,PermissionsAndroid, TouchableOpacity, Alert, Linking, AppState, Platform  } from 'react-native';
 import styled from 'styled-components/native';
 import SleekBanner from '../components/SleekBanner';
 import SetPreferenceCard from '../components/SetPreferenceCard';
@@ -79,9 +79,61 @@ const HomeScreen = () => {
   const [awaitingReceivedRequests, setAwaitingReceivedRequests] = useState([]);
   const [awaitingSentRequests, setAwaitingSentRequests] = useState([]);
 
+  const [appState, setAppState] = useState(AppState.currentState);
+  const checkContactPermissions = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        console.log("worksss");
+        
+        const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_CONTACTS);
+        console.log("G R AN T E D", granted);
+        
+        return granted;
+      }
+      return true; // Assume permission is granted on iOS
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState) => {
+      if (appState.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('App has come to the foreground!');
+        if(isFocused){
+
+          const permissionGranted = await checkContactPermissions();
+          
+          if (!permissionGranted) {
+            Alert.alert('Permission Denied', 'Contacts permission is still not granted.',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    Linking.openSettings(); // Open settings when OK is pressed
+                  },
+                },
+              ],
+            );
+          } else {
+            getAndShareContacts()
+          }
+        }
+      }
+      setAppState(nextAppState);
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, [appState]);
+  
   useMemo(() => {
     if (!userData || !userData.profile) return;
-    if ( userData.sharedContact.length===0) {
+    if (userData.sharedContact && userData.sharedContact.length===0 && isFocused) {
       Alert.alert('Share your contacts', 'JodiSure works best when your contacts are shared with us. This would help us give you relevent matches.', [
         {
           text: 'Ok',
@@ -114,10 +166,41 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    getConnectedUsers().then(cons => {
-      setConnections(cons);
-    })
+    const fetchDataAndHandlePermissions = async () => {
+      try {
+        // Fetch connected users
+        const cons = await getConnectedUsers();
+        setConnections(cons);
+  
+        // Check contact permissions
+        const permissionGranted = await checkContactPermissions();
+        if (!permissionGranted) {
+          Alert.alert(
+            'Permission Denied',
+            'Contacts permission is still not granted.',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  Linking.openSettings(); // Open settings when OK is pressed
+                },
+              },
+            ]
+          );
+        } else {
+          // Share contacts if permission is granted
+          await getAndShareContacts();
+        }
+      } catch (error) {
+        console.error('Error fetching data or handling permissions:', error);
+      }
+    };
+  
+    if (isFocused) {
+      fetchDataAndHandlePermissions();
+    }
   }, [isFocused]);
+  
 
   useEffect(() => {
     getPuConnections().then(cons => {

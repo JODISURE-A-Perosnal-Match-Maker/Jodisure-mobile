@@ -579,15 +579,15 @@ export async function setPuserShareContacts(contacts: any[]) {
       // let nameParts = contactName.split(" ");
       let firstName = doc?.data()?.first_name;
       let lastName = doc?.data()?.last_name;
-      // console.log('First Name------>', firstName);
-      // console.log('Last Name------->', lastName);
+      console.log('First Name------>', firstName);
+      console.log('Last Name------->', lastName);
       return usersCollection
         .doc(uid)
         .collection("sharedContacts")
         .doc(uid)
         .set({ constacts: contacts, updatedAt })
         .then(async () => {
-          // console.log("uid-=-->",uid);
+          console.log("uid-=-->",uid);
           await batchAddContact(
             uid,
             uid,
@@ -720,7 +720,7 @@ export async function getRecomendations(id?: string): Promise<any[]> {
     }
 
     const data = await response.json();
-    console.log("datadatadata", data);
+    console.log("datadatadata", JSON.stringify(data));
     // shuffleArray(data)
     return data;
   } catch (e) {
