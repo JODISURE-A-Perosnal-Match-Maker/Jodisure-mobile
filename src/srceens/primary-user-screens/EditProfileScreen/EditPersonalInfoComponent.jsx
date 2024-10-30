@@ -125,7 +125,7 @@ const EditPersonalInfoComponent = ({ handleChange, handleBlur, handleSubmit, val
                 <View style={styles.pickerBox}>
                     <ModalSelector
                         data={maritalData}
-                        initValue={selectedMaritalStatus? selectedMaritalStatus:"Select Marital Status"}
+                        initValue={selectedMaritalStatus ? selectedMaritalStatus : "Select Marital Status"}
                         onChange={(option) => {
                             setSelectedMaritalStatus(option.label);
                             handleChange('marital_status')(option.value);
@@ -150,16 +150,25 @@ const EditPersonalInfoComponent = ({ handleChange, handleBlur, handleSubmit, val
                     modal
                     open={open}
                     mode='date'
-                    date={moment(values.dob, 'DD/MM/YYYY').toDate()}
+                    date={
+                        values.dob
+                            ? moment(values.dob, 'DD/MM/YYYY').isValid()
+                                ? moment(values.dob, 'DD/MM/YYYY').toDate()
+                                : moment(values.dob, 'YYYY-MM-DD').isValid()
+                                    ? moment(values.dob, 'YYYY-MM-DD').toDate()
+                                    : new Date() // Fallback to current date if both formats are invalid
+                            : new Date() // Fallback to current date if dob is null/undefined
+                    }
                     onConfirm={(date) => {
                         setOpen(false);
-                        const newDate = moment(date).format('DD/MM/YYYY');
+                        const newDate = moment(date).format('DD/MM/YYYY'); // or any preferred format
                         setFieldValue('dob', newDate);
                     }}
                     onCancel={() => {
-                        setOpen(false)
+                        setOpen(false);
                     }}
                 />
+
             </View>
             <Input
                 onChangeText={handleChange('place_of_birth')}
@@ -184,7 +193,7 @@ const EditPersonalInfoComponent = ({ handleChange, handleBlur, handleSubmit, val
                 label='Birth Time am/pm'
                 errorMessage={errors.birth_time}
             />
-            <GoogleMapAutoComplete cities={cities} setCities={setCities} />
+            {/* <GoogleMapAutoComplete cities={cities} setCities={setCities} /> */}
 
             <Input
                 onChangeText={handleChange('height')}

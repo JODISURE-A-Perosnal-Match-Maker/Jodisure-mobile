@@ -18,7 +18,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { refresh } from "@react-native-community/netinfo";
 // import { BlurView } from "@react-native-community/blur";
 
-const MutualContactsCard = ({ uid, isNameNotShow = false, isUserConnected=false }) => {
+const MutualContactsCard = ({ uid, isNameNotShow = false, isUserConnected = false }) => {
   const [contacts, setContacts] = useState([]);
   const [allMutuals, setAllMutuals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,14 +26,14 @@ const MutualContactsCard = ({ uid, isNameNotShow = false, isUserConnected=false 
   const [limit, setLimit] = useState(3);
   const [totalContacts, setTotalContacts] = useState(0);
   const navigation = useNavigation();
-  
+
   function fetchMutualConnections(uid) {
     return getMutualConnections(uid)
       .then(({ error, result }) => {
         if (result.length) {
           setTotalContacts(result.length);
           setAllMutuals(result);
-  
+
           if (result.length > limit) {
             setContacts(result.slice(0, limit));
             setMoreContact(result.length - limit);
@@ -43,26 +43,26 @@ const MutualContactsCard = ({ uid, isNameNotShow = false, isUserConnected=false 
         }
       });
   }
-  
+
   useEffect(() => {
     if (!uid) return;
-  
+
     setLoading(true);
-  
+
     fetchMutualConnections(uid)
       .finally(() => {
         setLoading(false);
       });
   }, [uid]);
-  
-const refresh=()=>{
-  setLoading(true);
-  
+
+  const refresh = () => {
+    setLoading(true);
+
     fetchMutualConnections(uid)
       .finally(() => {
         setLoading(false);
       });
-}
+  }
   useEffect(() => {
     console.log("Able to see in mutual contact???", isNameNotShow);
   }, [isNameNotShow]);
@@ -125,19 +125,19 @@ const refresh=()=>{
   return (
     <View style={styles.container}>
       <View style={styles.containers}>
-      <Theme.TextB color="#242424" size="14px">
-        {totalContacts > 0 && `${totalContacts} `} Mutual contacts
-        {isNameNotShow && (
-        <FontAwesome5Icon style={styles.icon} name="lock" size={16} color='gold' />
-        )}
-      </Theme.TextB>
-      <TouchableOpacity onPress={refresh}>
-      <Theme.TextB color="#242424" size="14px">
-        Refresh
+        <Theme.TextB color="#242424" size="14px">
+          {totalContacts > 0 && `${totalContacts} `} Mutual contacts
+          {isNameNotShow && (
+            <FontAwesome5Icon style={styles.icon} name="lock" size={16} color='gold' />
+          )}
         </Theme.TextB>
-      </TouchableOpacity>
-      
-    </View>
+        <TouchableOpacity onPress={refresh}>
+          <Theme.TextB color="#242424" size="14px">
+            Refresh
+          </Theme.TextB>
+        </TouchableOpacity>
+
+      </View>
 
       {!contacts.length && (
         <Theme.TextB
@@ -152,7 +152,7 @@ const refresh=()=>{
       {moreContact > 0 && (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("MutualContacts", { contacts: allMutuals, isConnected: isUserConnected});
+            navigation.navigate("MutualContacts", { contacts: allMutuals, isConnected: isUserConnected });
           }}
           style={{ flexDirection: "row", justifyContent: "flex-end" }}
           disabled={isNameNotShow}
@@ -178,8 +178,8 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 2,
     width: "100%",
-    flexDirection:'row',
-    justifyContent:'space-between'
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   blur: {
     textShadowColor: "rgba(0, 0, 0, 0.55)",
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   col: {
     flexDirection: "column",
   },
- 
+
   avatar: {
     width: 32,
     height: 32,
