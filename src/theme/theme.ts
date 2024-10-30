@@ -32,7 +32,7 @@ interface Theme {
 
 const theme: Theme = {
   colors: {
-    primary: '#b2578e',
+    primary: '#D6AC60',
     primaryMedium:"#cc98b7",
     primaryDark:'#a05b85',
     secondary: '#9fcdd6',

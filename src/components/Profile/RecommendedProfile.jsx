@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
-import { StyleSheet, View, Image, Alert, TouchableOpacity, Text, Modal, Linking, Platform } from "react-native";
+import { StyleSheet, View, Image, Dimensions, Alert, TouchableOpacity, Text, Modal, Linking, Platform } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { showMessage, hideMessage } from "react-native-flash-message";
@@ -12,7 +12,9 @@ import theme from "../../theme/theme";
 import { DragableView } from "../SharedElement";
 import PieChart from "react-native-pie-chart";
 import { Button } from "react-native-elements";
-import FastImage from 'react-native-fast-image';
+// import FastImage from 'react-native-fast-image';
+import { ScrollView } from "react-native-gesture-handler";
+const { height: screenHeight } = Dimensions.get('window');
 
 const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false }) => {
   const [userImage, setUserImage] = useState("https://picsum.photos/200/300");
@@ -28,8 +30,8 @@ const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false })
       try {
         const result = await isPUserPremium();
         console.log("overRideHazy--->", overRideHazy);
-        console.log(" U I D",uid);
-        
+        console.log(" U I D", uid);
+
         setIsAbleToViewProfile(result);
         // console.log("Able to see???", isAbleToViewProfile)
       } catch (error) {
@@ -111,6 +113,8 @@ const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false })
     Linking.openURL(`tel:9748548623`);
   };
   const sendRequest = () => {
+    console.log("UID", uid);
+    
     sendFriendRequest(uid)
       .then((res) => {
         showMessage({
@@ -125,108 +129,113 @@ const RecomendedProfile = memo(({ uid, refresh, profile, overRideHazy = false })
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-      <View style={styles.imageContainer}>
-        <View style={styles.crossButton}>
-          <TouchableOpacity onPress={doStarUser}>
-            <AntDesign name="staro" size={24} color="#a05b85" />
-          </TouchableOpacity>
+      <View style={styles.container}>
+
+
+        <View style={styles.imageContainer}>
+          <View style={styles.crossButton}>
+            <TouchableOpacity onPress={doStarUser}>
+              <AntDesign name="staro" size={24} color="#a05b85" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.infoButton}>
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:9748548623`)}>
+
+              <View >
+                <AntDesign name="phone" size={24} color="#a05b85" />
+              </View>
+            </TouchableOpacity>
+          </View>
+          {userImage && (
+            <Image
+              style={styles.image}
+              blurRadius={isOtherDPVisible ? 0 : 50}
+              source={{ uri: userImage }}
+            />
+          )}
+
         </View>
-        <View style={styles.infoButton}>
-          <TouchableOpacity onPress={() => Linking.openURL(`tel:9748548623`)}>
 
-            <View >
-              <AntDesign name="phone" size={24} color="#a05b85" />
+        <View style={styles.profileDetailsContainer}>
+          <View style={styles.dragContainer}>
+            {profile?.similarityPercentage !== undefined ? (
+              <DragableView onPress={() => setModalVisible(true)} >
+                <View style={styles.box}>
+                  <PieChart
+                    widthAndHeight={80}
+                    series={[profile?.similarityPercentage, 100 - profile?.similarityPercentage]}
+                    sliceColor={[theme.colors.secondaryDark2, theme.colors.boneWhite]}
+                    coverRadius={0.7}
+                    coverFill={theme.colors.boneWhite}
+                  />
+                  <Text style={styles.numberText}>{Math.round(profile?.similarityPercentage)}
+                    <Text style={styles.percentText}>%</Text>
+
+                  </Text>
+                  <Text style={styles.numberText2}> JODI</Text>
+
+                </View>
+              </DragableView>) : null}
+          </View>
+          <Profile uid={uid} isFirstNameVisible={isFirstNameVisible} overRideHazy={overRideHazy}>
+
+            <View style={{ padding: 16, marginBottom: 40 }}>
+              <MutualContactsCard uid={uid} isNameNotShow={!isAbleToViewProfile} refresh={refresh} />
             </View>
-          </TouchableOpacity>
+            {Platform.OS === 'android' && (
+              <View style={styles.buttonContainer}>
+                <RoundDarkButton onPress={sendRequest} name="REQUEST TO VIEW PROFILE" style={styles.shadow} />
+              </View>
+            )}
+          </Profile>
         </View>
-        {userImage && (
-          <Image
-            style={styles.image}
-            blurRadius={isOtherDPVisible ? 0 : 50}
-            source={{ uri: userImage }}
-          />
-        )}
+        {/* modal starts here  */}
+        {profile?.similarityPercentage !== undefined ? (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>Mismatched Fields</Text>
+                {profile.mismatchedFields.map((field, index) => (
+                  <Text key={index} style={styles.modalText}>
+                    {formatField(field)}
 
-      </View>
-      <View style={styles.profileDetailsContainer}>
-        <View style={styles.dragContainer}>
-          {profile?.similarityPercentage !== undefined ? (
-            <DragableView onPress={() => setModalVisible(true)} >
-              <View style={styles.box}>
-                <PieChart
-                  widthAndHeight={80}
-                  series={[profile?.similarityPercentage, 100 - profile?.similarityPercentage]}
-                  sliceColor={[theme.colors.secondaryDark2, theme.colors.boneWhite]}
-                  coverRadius={0.7}
-                  coverFill={theme.colors.boneWhite}
-                />
-                <Text style={styles.numberText}>{Math.round(profile?.similarityPercentage)}
-                  <Text style={styles.percentText}>%</Text>
-
-                </Text>
-                <Text style={styles.numberText2}> JODI</Text>
+                  </Text>
+                ))}
+                <Button title="Close" onPress={() => setModalVisible(false)} />
 
               </View>
-            </DragableView>) : null}
-        </View>
-        <Profile uid={uid} isFirstNameVisible={isFirstNameVisible} overRideHazy={overRideHazy}>
-
-          <View style={{ padding: 16, marginBottom: 40 }}>
-            <MutualContactsCard uid={uid} isNameNotShow={!isAbleToViewProfile} refresh={refresh} />
-          </View>
-        </Profile>
-      </View>
-      {Platform.OS === 'android' && (
-        <View style={styles.buttonContainer}>
-          <RoundDarkButton onPress={sendRequest} name="REQUEST TO VIEW PROFILE" style={styles.shadow} />
-        </View>
-      )}
-      {/* modal starts here  */}
-      {profile?.similarityPercentage !== undefined ? (
+            </View>
+          </Modal>) : null}
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
+          visible={infomodalVisible}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setInfoModalVisible(!infomodalVisible);
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>Mismatched Fields</Text>
-              {profile.mismatchedFields.map((field, index) => (
-                <Text key={index} style={styles.modalText}>
-                  {formatField(field)}
+              <Text style={styles.modalTitle}>Contact Us</Text>
 
-                </Text>
-              ))}
-              <Button title="Close" onPress={() => setModalVisible(false)} />
+              <Text k style={styles.modalText}>
+                Found someone special? Connect directly or let our matchmakers introduce you! We value your privacy & transparency.  Pay only when you both agree to meet and unlock your hidden family network connections!  <Text style={styles.link} onPress={handleCallPress}>📞 Call Us </Text>to start your journey.
+              </Text>
+
+              <Button title=" OK " onPress={() => setInfoModalVisible(false)} />
 
             </View>
           </View>
-        </Modal>) : null}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={infomodalVisible}
-        onRequestClose={() => {
-          setInfoModalVisible(!infomodalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Contact Us</Text>
-
-            <Text k style={styles.modalText}>
-              Found someone special? Connect directly or let our matchmakers introduce you! We value your privacy & transparency.  Pay only when you both agree to meet and unlock your hidden family network connections!  <Text style={styles.link} onPress={handleCallPress}>📞 Call Us </Text>to start your journey.
-            </Text>
-
-            <Button title=" OK " onPress={() => setInfoModalVisible(false)} />
-
-          </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 });
 
@@ -237,10 +246,7 @@ const styles = StyleSheet.create({
     color: theme.colors.primaryDark, // You can replace this with your theme color
     // textDecorationLine: 'underline',
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
+
   modalTitle: {
     marginBottom: 15,
     textAlign: 'center',
@@ -370,13 +376,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  container: {
+    flexGrow: 1,
+    paddingBottom: 100,
+    backgroundColor: "#ffffff",
+    height: screenHeight * 2.4,
+
+  },
   profileDetailsContainer: {
     marginHorizontal: 16,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
+    height: "90%", // 40% of the screen height
+
     top: -40,
     backgroundColor: theme.colors.white,
-    marginBottom: -50,
+    marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -394,5 +409,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 26,
+    top: -40
   },
 });

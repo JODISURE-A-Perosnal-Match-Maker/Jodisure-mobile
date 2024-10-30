@@ -9,7 +9,7 @@ import Theme from '../../../components/Theme';
 const EditMiscellaneousComponent = ({ religions, handleChange, handleBlur, handleSubmit, values, touched, isValid, errors, setFieldValue }) => {
 
     const food_habit = [
-        "Jain vegetarian", 
+        "Jain vegetarian",
         "Vegan",
         "Lacto vegetarian",
         "Ovo vegetarian",
@@ -77,9 +77,9 @@ const EditMiscellaneousComponent = ({ religions, handleChange, handleBlur, handl
                 errorMessage={errors.hobbies}
             />
             <Input
-                onChangeText={handleChange('father_name')}
+                onChangeText={handleChange('contact_name')}
                 onBlur={handleBlur('father_name')}
-                value={values.father_name}
+                value={values.contact_name}
                 inputStyle={styles.inputContainer}
                 inputContainerStyle={styles.inputContainerStyle}
                 labelStyle={styles.inputLabelStyle}
@@ -125,6 +125,19 @@ const EditMiscellaneousComponent = ({ religions, handleChange, handleBlur, handl
                 errorMessage={errors.mother_occupation}
             />
 
+            <Input
+                onChangeText={handleChange('native_place')}
+                onBlur={handleBlur('native_place')}
+                value={values.native_place}
+                inputStyle={styles.inputContainer}
+                inputContainerStyle={styles.inputContainerStyle}
+                labelStyle={styles.inputLabelStyle}
+                placeholder=''
+                label="Native Place"
+                disabled={false}
+                errorMessage={errors.native_place}
+            />
+
             <View>
                 <View>
                     <Theme.TextB color="#000000" size="12px">Religion</Theme.TextB>
@@ -144,6 +157,20 @@ const EditMiscellaneousComponent = ({ religions, handleChange, handleBlur, handl
                     </Picker>
                 </View>
             </View>
+
+            <Input
+                onChangeText={handleChange('gotra')}
+                onBlur={handleBlur('gotra')}
+                value={values.gotra}
+                inputStyle={styles.inputContainer}
+                inputContainerStyle={styles.inputContainerStyle}
+                labelStyle={styles.inputLabelStyle}
+                placeholder=''
+                disabledInputStyle={true}
+                label="Gotra"
+                disabled={false}
+                errorMessage={errors.gotra}
+            />
             <View>
                 <View>
                     <Theme.TextB color="#000000" size="12px">Eating Habits</Theme.TextB>

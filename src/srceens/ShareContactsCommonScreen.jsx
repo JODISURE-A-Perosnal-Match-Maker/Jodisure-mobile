@@ -40,10 +40,7 @@ export const getContactsCommon = async ({ id = null, region = 'IN' }) => {
                 'Permission Denied',
                 'App needs access to contacts to function properly. Please enable contact permissions in settings.',
                 [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                    },
+                    
                     {
                         text: 'Open Settings',
                         onPress: () => {

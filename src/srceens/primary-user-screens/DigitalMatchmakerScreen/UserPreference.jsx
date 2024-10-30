@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions, Text, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import RangeSlider, { Slider } from 'react-native-range-slider-expo';
 // import { getMyPreferences, getReligions, setMyPreferences } from '../../services/UserService';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { CheckBox } from 'react-native-elements/dist/checkbox/CheckBox';
@@ -47,30 +46,31 @@ const UserPreference = () => {
 
 
     const onSelectedItemsChange = (selectedItems) => {
-        // console.log("Selected items:", selectedItems);
-        setSelected(selectedItems);
-        // Extract the names from selectedItems
         const selectedNames = selectedItems.map(itemId => data.find(item => item.id === itemId).name);
-        // console.log("Selected names:", selectedNames);
-        setReligion(selectedNames);
-
-
+        if (JSON.stringify(selected) !== JSON.stringify(selectedItems)) {
+            setSelected(selectedItems);
+            setReligion(selectedNames);
+        }
     };
+
+
+    const handleSliderChange = useCallback((values) => {
+        const [from, to] = values;
+        if (from !== fromValue || to !== toValue) {
+            setFromValue(from);
+            setToValue(to);
+        }
+    }, [fromValue, toValue]);
 
 
 
     useEffect(() => {
+        if (religions.length) {
+            const mappedData = religions.map((item, index) => ({ id: index.toString(), name: item }));
+            setData(mappedData);
+        }
+    }, [religions]);
 
-        // Map backend data to the required format
-        const mappedData = religions.map((item, index) => ({ id: index.toString(), name: item }));
-        setData(mappedData);
-        // console.log("this is beach code", mappedData)
-
-        // Filter the pre-selected values
-        const preSelectedItems = mappedData.filter(item => religion?.includes(item.name));
-        console.log("this is serious code", preSelectedItems.map(item => item.id));
-        setSelected(preSelectedItems.map(item => item.id));
-    }, [religion, religions]);
 
     const width = Dimensions.get('window').width;
 
@@ -79,24 +79,25 @@ const UserPreference = () => {
 
     }, []);
 
+    const handleMaritalStatusChange = (option) => {
+        setMaritalStatus(option.value);
+      };
+
     const getPreference = () => {
         getReligions()
             .then(rs => {
                 console.log(rs);
                 setReligions(rs);
                 console.log("List of all religion", rs);
-                return rs;
-            }).then(r => {
                 return getMyPreferences();
             }).then(res => {
                 if (res.exists) {
                     const { marital_status, religion, gender, fromValue, toValue } = res.data();
-                    setMaritalStatus(marital_status);
-                    setReligion(religion);
-                    // initializeData(religions, religion)
-                    setGender(gender);
-                    setFromValue(fromValue);
-                    setToValue(toValue);
+                    if (marital_status !== maritalStatus) setMaritalStatus(marital_status);
+                    if (religion !== religionState) setReligion(religion); // Avoid name clash with religion state
+                    if (gender !== genderState) setGender(gender); // Check if it differs from the state
+                    if (fromValue !== fromStateValue) setFromValue(fromValue);
+                    if (toValue !== toStateValue) setToValue(toValue);
                 } else {
                     alert('No preference is set! please set your preference.')
                 }
@@ -140,7 +141,7 @@ const UserPreference = () => {
                         <ModalSelector
                             data={maritalOptions}
                             initValue={marital_status ? marital_status : "Select Marital Status"}
-                            onChange={(option) => setMaritalStatus(option.value)}
+                            onChange={handleMaritalStatusChange}
                             selectStyle={styles.selectStyle}
                             selectTextStyle={styles.selectTextStyle}
                         />
@@ -219,15 +220,12 @@ const UserPreference = () => {
                                 enableLabel={false}
                                 allowOverlap={false}
                                 minMarkerOverlapDistance={5}
-                                trackStyle={{ height: 5 }}
+                                trackStyle={{ height: 5, }}
                                 selectedStyle={{ backgroundColor: theme.colors.secondaryMedium }}
                                 markerStyle={{ height: 20, width: 20, top: 2, backgroundColor: theme.colors.secondaryMedium }}
-                                onValuesChange={(values) => {
-                                    // console.log(values);
-                                    setFromValue(values[0]);
-                                    setToValue(values[1]);
-                                }}
+                                onValuesChangeFinish={handleSliderChange}
                             />
+
                             <Theme.Text color={theme.colors.secondaryMedium}>50</Theme.Text>
                         </View>
                     </View>
@@ -244,7 +242,7 @@ const UserPreference = () => {
                 </TouchableOpacity>
             </View>
 
-            <AdditionalUserPreference marital_status={marital_status} religion={religion} gender={gender} fromValue={fromValue} toValue={toValue}/>
+            <AdditionalUserPreference marital_status={marital_status} religion={religion} gender={gender} fromValue={fromValue} toValue={toValue} />
         </ScrollView>
         // </KeyboardAvoidingView> 
 
