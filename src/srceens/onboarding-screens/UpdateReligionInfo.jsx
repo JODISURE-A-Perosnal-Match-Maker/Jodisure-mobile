@@ -159,7 +159,7 @@ const UpdateReligionInfo = () => {
                     />
                     <CustomFormikInput
                             type="input"
-                            label="Enter your Gotra*"
+                            label="Enter your Gotra"
                             placeholder="Gotra"
                             value={values.gotra}
                             // helpText={'Jodisure will connect with this contact for further communication'}
@@ -184,6 +184,17 @@ const UpdateReligionInfo = () => {
                             error={touched.contact_name && errors.contact_name}
                             onChangeText={handleChange('contact_name')}
                             onBlur={handleBlur('contact_name')}
+                        />
+                        <CustomFormikInput
+                            type="input"
+                            label="Father's Occupation*"
+                            placeholder="Father's Occupation"
+                            value={values.father_occupation}
+                            // helpText={'Jodisure will connect with this contact for further communication'}
+                            disabled={false}
+                            error={touched.father_occupation && errors.father_occupation}
+                            onChangeText={handleChange('father_occupation')}
+                            onBlur={handleBlur('father_occupation')}
                         />
                         <CustomFormikInput
                             type="input"
