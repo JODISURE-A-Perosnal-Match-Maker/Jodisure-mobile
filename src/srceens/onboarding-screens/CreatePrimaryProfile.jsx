@@ -9,7 +9,7 @@ import * as yup from 'yup';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import { useRoute, useIsFocused, useNavigation } from '@react-navigation/native';
-import { genUUID, getHeightAndCity, getMyProfile, getReligions, updateProfile } from '../../services/UserService'
+import { genUUID, getHeightAndCity, getMyProfile, getPreferenceAndAbout, getReligions, updateProfile } from '../../services/UserService'
 import RoundDarkButton from '../../components/RoundDarkButton'
 import FullScreenLoader from '../../theme/FullScreenLoader'
 import { showMessage } from 'react-native-flash-message'
@@ -27,6 +27,7 @@ const editProfileSchema = yup.object().shape({
     // place_of_birth: yup.string().trim().min(5, 'Too short').required('Place of birth is required'),
     // city: yup.string().required('City is required'),
     gender: yup.string().required('Gender is required'),
+    complexion: yup.string().required('Complexion is required'),
     // eating_habits: yup.string().required('Eating habit is required'),
     marital_status: yup.string().required('Marital status is required'),
     profession: yup.string().trim().required('Profession is required'),
@@ -59,7 +60,8 @@ const CreatePrimaryProfile = () => {
     const isFocused = useIsFocused();
     const navigation = useNavigation();
     const [isTotalPrivacyEnabled, setTotalPrivacyEnabled] = useState(false);
-    const [isPhotoVisibilityEnabled, setPhotoVisibilityEnabled] = useState(false);
+    const [isPhotoVisibilityEnabled, setPhotoVisibilityEnabled] = useState(true);
+    const [complexions, setComplexions] = useState([])
     const [height, setHeight] = useState([])
     const [cities, setCities] = useState([])
     const [open2, setOpen2] = useState(false);
@@ -90,7 +92,15 @@ const CreatePrimaryProfile = () => {
                 setLoading(true);
                 try {
                     const { city, height } = await getHeightAndCity();
+                    const { complexion } = await getPreferenceAndAbout()
+                    
                     let pickCity
+                    let pickComplexion
+                    if (complexion && Array.isArray(complexion)) {
+                        
+                        console.log("complexion-------",complexion);
+                        setComplexions(complexion);
+                    }
                     if (city) {
 
                         pickCity = city.map(city => ({
@@ -110,6 +120,7 @@ const CreatePrimaryProfile = () => {
 
                     setHeight(pickHeight);
                     setCities(pickCity);
+                    // setComplexions(pickComplexion)
 
                     const profile = await getMyProfile();
                     console.log(profile.exists);
@@ -416,6 +427,17 @@ const CreatePrimaryProfile = () => {
 
                             />
                             <View style={{ marginBottom: 20 }}></View>
+                            <CustomFormikInput
+                                type="picker"
+                                label="Your complexion *"
+                                placeholder="Complexion"
+                                value={values.complexion}
+                                disabled={false}
+                                helpText={'Choose a complexion'}
+                                error={errors.complexion}
+                                onChangeText={handleChange('complexion')}
+                                pickerOptions={Array.isArray(complexions) ? complexions.map(r => ({ "label": r, "value": r })) : []}
+                            />
 
                             <CustomFormikInput
                                 type="input"

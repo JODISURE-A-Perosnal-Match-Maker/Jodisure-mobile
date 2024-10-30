@@ -6,7 +6,7 @@ import theme from '../../theme/theme';
 import PrimaryUserLoginScreen from './PrimaryUserLoginScreen';
 import RoundedFilledButtonPrimary from '../../theme/RoundedFilledButtonPrimary';
 // const bgs = ["#05626E", "#6435a5", "#5106b3", "#690169", "#40038f", "#5e08ce", "#05626E"]; // only 2 slider requested by client
-const bgs = ["#690169", "#05626E", "#5106b3", "#690169", "#690169", "#5e08ce", "#05626E"]; // background color changes as requested by client
+const bgs = ["#11261F", "#B68C40", "#D6AC60", "#690169", "#690169", "#5e08ce", "#05626E"]; // background color changes as requested by client
 const DATA = [
   // {
   //   key: '1',
@@ -45,7 +45,7 @@ const DATA = [
     title: 'Welcome',
     description: 'Discerning hearts deserve a bespoke approach to love. We create exceptional connections tailored to your unique desires.',
     // image: 'https://image.flaticon.com/icons/png/512/4927/4927656.png',
-    image: require('../../assets/images/splash_icon_old.png'),
+    image: require('../../assets/images/logo_dark.png'),
     subImage: require('../../assets/images/callwhite.png'),
     nativeImage: true
   },
@@ -63,7 +63,7 @@ const DATA = [
     description: 'Continue using the App.',
     // image: 'https://image.flaticon.com/icons/png/512/1432/1432525.png',
     type: 'component',
-    image: require('../../assets/images/splash_icon.png'),
+    image: require('../../assets/images/logo_dark.png'),
     nativeImage: true
   },
 ];
